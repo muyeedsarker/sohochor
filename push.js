@@ -52,29 +52,19 @@ function installReminderHomeLink(){
   });
 }
 function install3DHomeLogin(){
-  const style=document.createElement('style');
-  style.id='sohochor-3d-buttons';
+  const style=document.createElement('style'); style.id='sohochor-3d-buttons';
   style.textContent=`
-    .links a[href="index.html"]{
-      display:inline-flex;align-items:center;justify-content:center;
-      min-width:68px;padding:8px 13px;border-radius:12px;
-      color:#fff;background:linear-gradient(145deg,#16a36a,#075735 72%);
-      border:1px solid #4fd39a66;
-      box-shadow:inset 2px 2px 5px #ffffff38,4px 6px 12px #001b1055;
-      transform:translateY(-1px);transition:transform .18s,box-shadow .18s;
-    }
+    .links a[href="index.html"]{display:inline-flex;align-items:center;justify-content:center;min-width:68px;padding:8px 13px;border-radius:12px;color:#fff;background:linear-gradient(145deg,#16a36a,#075735 72%);border:1px solid #4fd39a66;box-shadow:inset 2px 2px 5px #ffffff38,4px 6px 12px #001b1055;transform:translateY(-1px);transition:transform .18s,box-shadow .18s}
     .links a[href="index.html"]:hover{color:#fff;transform:translateY(-3px);box-shadow:inset 2px 2px 5px #ffffff44,5px 9px 16px #001b1066}
-    .login{
-      display:inline-flex!important;align-items:center;justify-content:center;
-      min-width:78px;padding:10px 17px!important;border-radius:13px!important;
-      color:#fff!important;background:linear-gradient(145deg,#18a86b,#075a39 72%)!important;
-      border:1px solid #55dba266!important;
-      box-shadow:inset 2px 2px 6px #ffffff40,5px 7px 14px #001b1055,0 0 0 1px #043b2844!important;
-      text-shadow:0 1px 2px #001b1066;transform:perspective(180px) rotateX(2deg) translateY(-1px);
-      transition:transform .18s,box-shadow .18s;
-    }
+    .login{display:inline-flex!important;align-items:center;justify-content:center;min-width:78px;padding:10px 17px!important;border-radius:13px!important;color:#fff!important;background:linear-gradient(145deg,#18a86b,#075a39 72%)!important;border:1px solid #55dba266!important;box-shadow:inset 2px 2px 6px #ffffff40,5px 7px 14px #001b1055,0 0 0 1px #043b2844!important;text-shadow:0 1px 2px #001b1066;transform:perspective(180px) rotateX(2deg) translateY(-1px);transition:transform .18s,box-shadow .18s}
     .login:hover{transform:perspective(180px) rotateX(2deg) translateY(-3px) scale(1.02)!important;box-shadow:inset 2px 2px 6px #ffffff4d,6px 10px 18px #001b1066,0 0 0 1px #043b2855!important}
     .login:active,.links a[href="index.html"]:active{transform:translateY(1px)!important;box-shadow:inset 3px 3px 7px #001b1040,2px 3px 7px #001b1055!important}
+    .cta,.dark-btn,.primary,button[type="submit"],button[type="button"],.head>a,.quick a,.arr{position:relative!important;transition:transform .16s ease,box-shadow .16s ease,filter .16s ease!important}
+    .cta,.dark-btn,.primary,button[type="submit"],button[type="button"]{border:1px solid rgba(255,255,255,.3)!important;box-shadow:inset 0 2px 3px rgba(255,255,255,.34),inset 0 -3px 5px rgba(0,0,0,.16),0 5px 0 rgba(0,48,30,.38),0 10px 20px rgba(0,50,32,.18)!important;font-weight:900!important}
+    .cta:hover,.dark-btn:hover,.primary:hover,button[type="submit"]:hover,button[type="button"]:hover,.head>a:hover,.quick a:hover,.arr:hover{transform:translateY(-3px)!important;filter:brightness(1.04)!important;box-shadow:inset 0 2px 3px rgba(255,255,255,.4),inset 0 -3px 6px rgba(0,0,0,.18),0 8px 0 rgba(0,48,30,.34),0 15px 25px rgba(0,50,32,.22)!important}
+    .cta:active,.dark-btn:active,.primary:active,button:active,.head>a:active,.quick a:active,.arr:active{transform:translateY(3px)!important;box-shadow:inset 0 2px 5px rgba(0,0,0,.2),0 2px 0 rgba(0,48,30,.38)!important}
+    .quick a{border:1px solid #dbe9e1!important;background:linear-gradient(145deg,#fff,#edf7f2)!important;box-shadow:inset 1px 1px 2px #fff,0 4px 0 rgba(0,70,45,.12),0 8px 14px rgba(0,60,40,.1)!important;transition:.16s!important}
+    .arr{box-shadow:inset 1px 1px 2px #fff,0 3px 0 rgba(0,70,45,.16),0 6px 10px rgba(0,60,40,.12)!important}
     @media(max-width:850px){.links a[href="index.html"]{display:none}}
   `;
   document.head.appendChild(style);
