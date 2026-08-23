@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#08783f"><title>SOHOCHOR — Personal Notepad</title>
+<link rel="manifest" href="./manifest.json"><link rel="stylesheet" href="theme.css?v=6">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+.note-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.note-card{background:#fff;border-radius:18px;padding:16px;box-shadow:0 5px 18px #0002;border-left:6px solid #08783f}.note-card h3{margin:0 0 8px}.note-card p{white-space:pre-wrap;margin:0 0 12px;color:#40544b}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button,.save-btn{border:0;border-radius:12px;padding:10px 14px;font-weight:800;cursor:pointer}.edit{background:#fff0bd}.del{background:#ffdede;color:#a00}.save-btn{background:#08783f;color:#fff}.private{font-size:12px;color:#08783f;font-weight:800}.search{width:100%;box-sizing:border-box;padding:13px;border:2px solid #b7d9c8;border-radius:13px;font-size:16px}.empty{text-align:center;color:#687a72;padding:20px}
+</style></head>
+<body><main class="page">
+<section class="hero"><div class="hero-kicker">SOHOCHOR — সহচর</div><h1>📝 Personal Notepad</h1><p>আপনার ব্যক্তিগত নোট — শুধু আপনার Account-এর জন্য।</p></section>
+<section class="panel"><input id="search" class="search" placeholder="🔎 নোট খুঁজুন..." oninput="renderNotes()"><div style="height:10px"></div><input id="title" placeholder="নোটের শিরোনাম" style="width:100%;box-sizing:border-box;padding:12px;border-radius:12px;border:2px solid #b7d9c8"><textarea id="content" rows="7" placeholder="আপনার নোট লিখুন..." style="width:100%;box-sizing:border-box;padding:12px;border-radius:12px;border:2px solid #b7d9c8;margin-top:10px"></textarea><button class="save-btn" onclick="saveNote()" style="margin-top:10px">💾 Save</button><button id="cancel" onclick="resetEditor()" style="display:none;margin:10px 0 0 8px">Cancel</button><p id="msg" class="empty" aria-live="polite"></p></section>
+<section><div id="notes" class="note-grid"></div></section><p><a href="personal.html">👤 Personal Space</a> · <a href="index.html">🏠 Home</a></p>
+</main><script>
+const db=supabase.createClient('https://pgwxfccpphjjveoeeqhv.supabase.co','sb_publishable_Hi2YfMYdGfGS3al-ojQA9A_6wPEG2ym');
+let user=null, editingId=null, notes=[]; const $=id=>document.getElementById(id);
+async function init(){const {data,error}=await db.auth.getSession();if(error||!data.session){location.href='auth.html';return}user=data.session.user;await loadNotes()}
+async function loadNotes(){const {data,error}=await db.from('personal_notes').select('*').eq('user_id',user.id).order('updated_at',{ascending:false});if(error){$('msg').textContent='নোট টেবিল প্রস্তুত নেই। Supabase-এ supabase/notepad.sql একবার Run করুন।';notes=[];renderNotes();return}notes=data||[];$('msg').textContent='';renderNotes()}
+function renderNotes(){const term=$('search').value.trim().toLowerCase();const list=notes.filter(n=>(n.title+' '+n.content).toLowerCase().includes(term));$('notes').innerHTML=list.length?list.map(n=>`<article class="note-card"><h3>${esc(n.title)}</h3><p>${esc(n.content)}</p><div class="private">🔒 Private</div><div class="actions" style="margin-top:10px"><button class="edit" onclick="editNote('${n.id}')">✏️ Edit</button><button class="del" onclick="deleteNote('${n.id}')">🗑️ Delete</button></div></article>`).join(''):'<div class="empty">এখনো কোনো নোট নেই। নতুন নোট লিখুন।</div>'}
+async function saveNote(){const title=$('title').value.trim()||'নতুন নোট',content=$('content').value.trim();if(!content){$('msg').textContent='নোটের লেখা দিন।';return} $('msg').textContent='সংরক্ষণ হচ্ছে...';let r;if(editingId)r=await db.from('personal_notes').update({title,content,is_private:true}).eq('id',editingId).eq('user_id',user.id);else r=await db.from('personal_notes').insert({user_id:user.id,title,content,is_private:true});if(r.error){$('msg').textContent='সমস্যা: '+r.error.message;return}resetEditor();await loadNotes()}
+function editNote(id){const n=notes.find(x=>String(x.id)===String(id));if(!n)return;editingId=id;$('title').value=n.title;$('content').value=n.content;$('cancel').style.display='inline-block';window.scrollTo({top:0,behavior:'smooth'})}
+async function deleteNote(id){if(!confirm('এই নোটটি মুছে ফেলবেন?'))return;$('msg').textContent='মুছে ফেলা হচ্ছে...';const r=await db.from('personal_notes').delete().eq('id',id).eq('user_id',user.id);if(r.error){$('msg').textContent='সমস্যা: '+r.error.message;return}await loadNotes()}
+function resetEditor(){$('title').value='';$('content').value='';editingId=null;$('cancel').style.display='none';$('msg').textContent=''}
+function esc(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+init();
+</script></body></html>
