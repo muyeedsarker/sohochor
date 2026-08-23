@@ -4,22 +4,23 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Islamic Quiz</title>
 <style>
-body{font-family:system-ui,sans-serif;margin:0;background:#f4f7f5;color:#17352b}.wrap{max-width:720px;margin:auto;padding:20px}.card{background:white;border-radius:16px;padding:20px;margin:14px 0;box-shadow:0 3px 14px #0001}button{padding:12px 18px;border:0;border-radius:10px;background:#176b4d;color:white;font-size:16px;cursor:pointer}.option{display:block;width:100%;margin:9px 0;background:#eef4f1;color:#17352b;text-align:left}.result{font-size:20px;font-weight:700}
+body{font-family:system-ui,sans-serif;margin:0;background:#f4f7f5;color:#17352b}.wrap{max-width:720px;margin:auto;padding:20px}.card{background:white;border-radius:16px;padding:20px;margin:14px 0;box-shadow:0 3px 14px #0001}button{padding:12px 18px;border:0;border-radius:10px;background:#176b4d;color:white;font-size:16px;cursor:pointer}.option{display:block;width:100%;margin:9px 0;background:#eef4f1;color:#17352b;text-align:left}.result{font-size:20px;font-weight:700}.review{font-size:16px;font-weight:400;border-top:1px solid #ddd;padding-top:12px;margin-top:12px}.correct{color:#16734a}.wrong{color:#b42318}.explain{font-size:14px;font-weight:400;margin-top:6px}.unanswered{color:#9a6700}
 </style></head>
 <body><main class="wrap"><h1>🕌 ইসলামিক কুইজ</h1><p>সাধারণ ইসলামিক জ্ঞান যাচাই করুন।</p><div id="quiz"></div><button onclick="submitQuiz()">ফলাফল দেখুন</button><div id="result" class="card" hidden></div></main>
 <script>
 const qs=[
-['ইসলামের প্রথম স্তম্ভ কোনটি?',['শাহাদাহ','সালাত','সাওম','যাকাত'],0],
-['পবিত্র কুরআন কোন ভাষায় নাজিল হয়েছে?',['আরবি','ফারসি','উর্দু','বাংলা'],0],
-['প্রতিদিন ফরজ নামাজ কত ওয়াক্ত?',['৩','৪','৫','৬'],2],
-['রমজানের রোজা ইসলামের কোন স্তম্ভ?',['প্রথম','দ্বিতীয়','তৃতীয়','চতুর্থ'],2],
-['হজ কোন শহরে প্রধানত অনুষ্ঠিত হয়?',['মদিনা','মক্কা','জেরুজালেম','কায়রো'],1],
-['কুরআনের প্রথম সূরা কোনটি?',['আল-বাকারা','আল-ফাতিহা','আন-নাস','আল-ইখলাস'],1],
-['যাকাত সাধারণত কোন সম্পদের ওপর ফরজ হয়?',['নিসাব পরিমাণ যোগ্য সম্পদ','শুধু খাবার','শুধু পোশাক','শুধু বই'],0],
-['ইসলামে সাওম বলতে কী বোঝায়?',['হজ','রোজা','যাকাত','সদকা'],1],
-['মুসলমানদের সাপ্তাহিক বিশেষ জামাতের দিন কোনটি?',['সোমবার','বুধবার','শুক্রবার','রবিবার'],2],
-['ইমানের মৌলিক বিষয়গুলোর একটি কোনটি?',['আখিরাতে বিশ্বাস','শুধু ব্যবসা','শুধু ভ্রমণ','শুধু খেলাধুলা'],0]
+['ইসলামের প্রথম স্তম্ভ কোনটি?',['শাহাদাহ','সালাত','সাওম','যাকাত'],0,'শাহাদাহ ইসলামের পাঁচটি স্তম্ভের প্রথম।'],
+['পবিত্র কুরআন কোন ভাষায় নাজিল হয়েছে?',['আরবি','ফারসি','উর্দু','বাংলা'],0,'কুরআন আরবি ভাষায় নাজিল হয়েছে।'],
+['প্রতিদিন ফরজ নামাজ কত ওয়াক্ত?',['৩','৪','৫','৬'],2,'প্রতিদিন পাঁচ ওয়াক্ত ফরজ সালাত রয়েছে।'],
+['রমজানের রোজা ইসলামের কোন স্তম্ভ?',['প্রথম','দ্বিতীয়','তৃতীয়','চতুর্থ'],2,'সাওম বা রোজা ইসলামের পাঁচটি স্তম্ভের একটি।'],
+['হজ কোন শহরে প্রধানত অনুষ্ঠিত হয়?',['মদিনা','মক্কা','জেরুজালেম','কায়রো'],1,'হজের প্রধান ইবাদতগুলো মক্কা ও তার আশপাশের পবিত্র স্থানে অনুষ্ঠিত হয়।'],
+['কুরআনের প্রথম সূরা কোনটি?',['আল-বাকারা','আল-ফাতিহা','আন-নাস','আল-ইখলাস'],1,'মুসহাফের বিন্যাসে প্রথম সূরা হলো আল-ফাতিহা।'],
+['যাকাত সাধারণত কোন সম্পদের ওপর ফরজ হয়?',['নিসাব পরিমাণ যোগ্য সম্পদ','শুধু খাবার','শুধু পোশাক','শুধু বই'],0,'নির্দিষ্ট শর্ত ও নিসাব পূরণকারী যোগ্য সম্পদের ওপর যাকাত প্রযোজ্য।'],
+['ইসলামে সাওম বলতে কী বোঝায়?',['হজ','রোজা','যাকাত','সদকা'],1,'সাওম অর্থ রোজা বা নির্দিষ্ট সময় পানাহারসহ কিছু বিষয় থেকে বিরত থাকা।'],
+['মুসলমানদের সাপ্তাহিক বিশেষ জামাতের দিন কোনটি?',['সোমবার','বুধবার','শুক্রবার','রবিবার'],2,'শুক্রবার জুমার বিশেষ জামাত অনুষ্ঠিত হয়।'],
+['ইমানের মৌলিক বিষয়গুলোর একটি কোনটি?',['আখিরাতে বিশ্বাস','শুধু ব্যবসা','শুধু ভ্রমণ','শুধু খেলাধুলা'],0,'আখিরাতে বিশ্বাস ঈমানের মৌলিক বিষয়গুলোর অন্তর্ভুক্ত।']
 ];
-const el=document.getElementById('quiz');qs.forEach((q,i)=>{const c=document.createElement('section');c.className='card';c.innerHTML=`<h3>${i+1}. ${q[0]}</h3>`+q[1].map((o,j)=>`<button class="option"><label><input type="radio" name="q${i}" value="${j}"> ${o}</label></button>`).join('');el.appendChild(c)});
-function submitQuiz(){let score=0;qs.forEach((q,i)=>{const a=document.querySelector(`input[name=q${i}]:checked`);if(a&&+a.value===q[2])score++});const r=document.getElementById('result');r.hidden=false;r.innerHTML=`আপনার স্কোর: ${score}/${qs.length}<br><small>${score>=8?'দারুণ!':'আরও পড়ুন ও আবার চেষ্টা করুন।'}</small>`;window.scrollTo({top:r.offsetTop,behavior:'smooth'})}
+const el=document.getElementById('quiz');
+qs.forEach((q,i)=>{const c=document.createElement('section');c.className='card';c.innerHTML=`<h3>${i+1}. ${q[0]}</h3>`+q[1].map((o,j)=>`<button class="option"><label><input type="radio" name="q${i}" value="${j}"> ${o}</label></button>`).join('');el.appendChild(c)});
+function submitQuiz(){let score=0,html='';qs.forEach((q,i)=>{const a=document.querySelector(`input[name=q${i}]:checked`);const correct=q[1][q[2]];if(a&&+a.value===q[2]){score++;html+=`<div class="review correct">${i+1}. ✅ সঠিক উত্তর: ${correct}<div class="explain">${q[3]}</div></div>`}else if(a){html+=`<div class="review wrong">${i+1}. ❌ আপনার উত্তর: ${q[1][+a.value]}<br>✅ সঠিক উত্তর: ${correct}<div class="explain">${q[3]}</div></div>`}else{html+=`<div class="review unanswered">${i+1}. ⚠️ উত্তর দেওয়া হয়নি<br>✅ সঠিক উত্তর: ${correct}<div class="explain">${q[3]}</div></div>`}});const r=document.getElementById('result');r.hidden=false;r.innerHTML=`<div>আপনার স্কোর: ${score}/${qs.length}</div><small>${score>=8?'দারুণ!':'আরও পড়ুন ও আবার চেষ্টা করুন।'}</small>${html}`;window.scrollTo({top:r.offsetTop,behavior:'smooth'})}
 </script></body></html>
