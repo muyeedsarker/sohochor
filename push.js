@@ -1,72 +1,33 @@
 const PUSH_PUBLIC_KEY = "BC1FvK-ER2a0uXro8S_JuUsAzSBQ0dxrZqEM1kox8s7l1C5J_AY0SYaV5UkhE8SMR-opBgrYey8w0i0dazs9eKQ";
 
-function pushSupported() {
-  return "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
-}
-function urlBase64ToUint8Array(base64String) {
-  const padding = "=".repeat((4 - base64String.length % 4) % 4);
-  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
-  const rawData = atob(base64String + padding);
-  return Uint8Array.from([...atob(base64)].map(char => char.charCodeAt(0)));
-}
-async function supabasePushClient() {
-  const db = window.db || window.supabase?.createClient?.("https://pgwxfccpphjjveoeeqhv.supabase.co", "sb_publishable_Hi2YfMYdGfGS3al-ojQA9A_6wPEG2ym");
-  if (!db) throw new Error("Supabase client not available");
-  return db;
-}
-async function registerPushSubscription(showFeedback = true) {
-  if (!pushSupported()) throw new Error("এই ব্রাউজারে Push Notification সমর্থিত নয়।");
-  const permission = await Notification.requestPermission();
-  if (permission !== "granted") throw new Error("Notification permission অনুমোদন করা হয়নি।");
-  const registration = await navigator.serviceWorker.ready;
-  let subscription = await registration.pushManager.getSubscription();
-  if (!subscription) subscription = await registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(PUSH_PUBLIC_KEY) });
-  const db = await supabasePushClient();
-  const { data: { user } } = await db.auth.getUser();
-  const payload = subscription.toJSON();
-  if (!payload.endpoint || !payload.keys?.p256dh || !payload.keys?.auth) throw new Error("Push subscription তৈরি করা যায়নি।");
-  const row = { user_id: user?.id || null, endpoint: payload.endpoint, p256dh: payload.keys.p256dh, auth: payload.keys.auth, user_agent: navigator.userAgent, updated_at: new Date().toISOString() };
-  let error;
-  if (user) ({ error } = await db.from("push_subscriptions").upsert(row, { onConflict: "endpoint" }));
-  else { ({ error } = await db.from("push_subscriptions").insert(row)); if (error?.code === "23505") error = null; }
-  if (error) throw error;
-  if (showFeedback) alert("🔔 Notification চালু হয়েছে। নতুন News/Notice প্রকাশ হলে জানানো হবে।");
-  return subscription;
-}
-async function installPushUI() {
-  if (!pushSupported()) return;
-  const registration = await navigator.serviceWorker.ready;
-  const active = !!(await registration.pushManager.getSubscription());
-  const old = document.getElementById("pushTools"); if (old) old.remove();
-  const box = document.createElement("div"); box.id = "pushTools"; box.className = "panel";
-  box.innerHTML = `<div class="section-title"><h2>🔔 নোটিফিকেশন</h2></div><p class="muted">নতুন নিউজ ও নোটিশ প্রকাশ হলে আপনার ফোনে নোটিফিকেশন পেতে চালু করুন।</p><button id="pushEnable" class="primary" type="button">${active ? "🔔 Notification চালু আছে" : "🔔 Notification চালু করুন"}</button>`;
-  const main = document.querySelector("main.page") || document.body; main.insertBefore(box, main.firstChild?.nextSibling || main.firstChild);
-  const btn = document.getElementById("pushEnable"); btn.disabled = active;
-  btn.onclick = async () => { btn.disabled = true; try { await registerPushSubscription(true); btn.textContent = "🔔 Notification চালু আছে"; } catch (e) { btn.disabled = false; alert(e.message || "Notification চালু করা যায়নি।"); } };
-}
-function installReminderHomeLink(){
-  if(!location.pathname.endsWith('/index.html') && !location.pathname.endsWith('/')) return;
-  document.querySelectorAll('[data-coming="Alarm"],[data-coming="Reminder"]').forEach(a=>{
-    a.removeAttribute('data-coming'); a.classList.remove('coming'); a.setAttribute('href','./reminder.html');
-    const small=a.querySelector('small'); if(small) small.textContent='Reminder + Alarm চালু আছে';
-  });
-}
-function install3DHomeLogin(){
-  const style=document.createElement('style'); style.id='sohochor-3d-buttons';
-  style.textContent=`
-    .links a[href="index.html"]{display:inline-flex;align-items:center;justify-content:center;min-width:68px;padding:8px 13px;border-radius:12px;color:#fff;background:linear-gradient(145deg,#16a36a,#075735 72%);border:1px solid #4fd39a66;box-shadow:inset 2px 2px 5px #ffffff38,4px 6px 12px #001b1055;transform:translateY(-1px);transition:transform .18s,box-shadow .18s}
-    .links a[href="index.html"]:hover{color:#fff;transform:translateY(-3px);box-shadow:inset 2px 2px 5px #ffffff44,5px 9px 16px #001b1066}
-    .login{display:inline-flex!important;align-items:center;justify-content:center;min-width:78px;padding:10px 17px!important;border-radius:13px!important;color:#fff!important;background:linear-gradient(145deg,#18a86b,#075a39 72%)!important;border:1px solid #55dba266!important;box-shadow:inset 2px 2px 6px #ffffff40,5px 7px 14px #001b1055,0 0 0 1px #043b2844!important;text-shadow:0 1px 2px #001b1066;transform:perspective(180px) rotateX(2deg) translateY(-1px);transition:transform .18s,box-shadow .18s}
-    .login:hover{transform:perspective(180px) rotateX(2deg) translateY(-3px) scale(1.02)!important;box-shadow:inset 2px 2px 6px #ffffff4d,6px 10px 18px #001b1066,0 0 0 1px #043b2855!important}
-    .login:active,.links a[href="index.html"]:active{transform:translateY(1px)!important;box-shadow:inset 3px 3px 7px #001b1040,2px 3px 7px #001b1055!important}
-    .cta,.dark-btn,.primary,button[type="submit"],button[type="button"],.head>a,.quick a,.arr{position:relative!important;transition:transform .16s ease,box-shadow .16s ease,filter .16s ease!important}
-    .cta,.dark-btn,.primary,button[type="submit"],button[type="button"]{border:1px solid rgba(255,255,255,.3)!important;box-shadow:inset 0 2px 3px rgba(255,255,255,.34),inset 0 -3px 5px rgba(0,0,0,.16),0 5px 0 rgba(0,48,30,.38),0 10px 20px rgba(0,50,32,.18)!important;font-weight:900!important}
-    .cta:hover,.dark-btn:hover,.primary:hover,button[type="submit"]:hover,button[type="button"]:hover,.head>a:hover,.quick a:hover,.arr:hover{transform:translateY(-3px)!important;filter:brightness(1.04)!important;box-shadow:inset 0 2px 3px rgba(255,255,255,.4),inset 0 -3px 6px rgba(0,0,0,.18),0 8px 0 rgba(0,48,30,.34),0 15px 25px rgba(0,50,32,.22)!important}
-    .cta:active,.dark-btn:active,.primary:active,button:active,.head>a:active,.quick a:active,.arr:active{transform:translateY(3px)!important;box-shadow:inset 0 2px 5px rgba(0,0,0,.2),0 2px 0 rgba(0,48,30,.38)!important}
-    .quick a{border:1px solid #dbe9e1!important;background:linear-gradient(145deg,#fff,#edf7f2)!important;box-shadow:inset 1px 1px 2px #fff,0 4px 0 rgba(0,70,45,.12),0 8px 14px rgba(0,60,40,.1)!important;transition:.16s!important}
-    .arr{box-shadow:inset 1px 1px 2px #fff,0 3px 0 rgba(0,70,45,.16),0 6px 10px rgba(0,60,40,.12)!important}
-    @media(max-width:850px){.links a[href="index.html"]{display:none}}
-  `;
-  document.head.appendChild(style);
-}
-document.addEventListener("DOMContentLoaded", () => { installReminderHomeLink(); install3DHomeLogin(); navigator.serviceWorker?.register("./sw.js").then(() => installPushUI()).catch(() => {}); });
+function pushSupported(){return "serviceWorker" in navigator&&"PushManager" in window&&"Notification" in window}
+function urlBase64ToUint8Array(base64String){const padding="=".repeat((4-base64String.length%4)%4);const base64=(base64String+padding).replace(/-/g,"+").replace(/_/g,"/");return Uint8Array.from([...atob(base64)].map(c=>c.charCodeAt(0)))}
+async function supabasePushClient(){const db=window.db||window.supabase?.createClient?.("https://pgwxfccpphjjveoeeqhv.supabase.co","sb_publishable_Hi2YfMYdGfGS3al-ojQA9A_6wPEG2ym");if(!db)throw new Error("Supabase client not available");return db}
+async function registerPushSubscription(showFeedback=true){if(!pushSupported())throw new Error("এই ব্রাউজারে Push Notification সমর্থিত নয়।");const permission=await Notification.requestPermission();if(permission!=="granted")throw new Error("Notification permission অনুমোদন করা হয়নি।");const registration=await navigator.serviceWorker.ready;let subscription=await registration.pushManager.getSubscription();if(!subscription)subscription=await registration.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64ToUint8Array(PUSH_PUBLIC_KEY)});const db=await supabasePushClient();const {data:{user}}=await db.auth.getUser();const payload=subscription.toJSON();if(!payload.endpoint||!payload.keys?.p256dh||!payload.keys?.auth)throw new Error("Push subscription তৈরি করা যায়নি।");const row={user_id:user?.id||null,endpoint:payload.endpoint,p256dh:payload.keys.p256dh,auth:payload.keys.auth,user_agent:navigator.userAgent,updated_at:new Date().toISOString()};let error;if(user)({error}=await db.from("push_subscriptions").upsert(row,{onConflict:"endpoint"}));else{({error}=await db.from("push_subscriptions").insert(row));if(error?.code==="23505")error=null}if(error)throw error;if(showFeedback)alert("🔔 Notification চালু হয়েছে। নতুন News/Notice প্রকাশ হলে জানানো হবে।");return subscription}
+async function installPushUI(){if(!pushSupported())return;const registration=await navigator.serviceWorker.ready;const active=!!(await registration.pushManager.getSubscription());const old=document.getElementById("pushTools");if(old)old.remove();const box=document.createElement("div");box.id="pushTools";box.className="panel";box.innerHTML=`<div class="section-title"><h2>🔔 নোটিফিকেশন</h2></div><p class="muted">নতুন নিউজ ও নোটিশ প্রকাশ হলে আপনার ফোনে নোটিফিকেশন পেতে চালু করুন।</p><button id="pushEnable" class="primary" type="button">${active?"🔔 Notification চালু আছে":"🔔 Notification চালু করুন"}</button>`;const main=document.querySelector("main.page")||document.body;main.insertBefore(box,main.firstChild?.nextSibling||main.firstChild);const btn=document.getElementById("pushEnable");btn.disabled=active;btn.onclick=async()=>{btn.disabled=true;try{await registerPushSubscription(true);btn.textContent="🔔 Notification চালু আছে"}catch(e){btn.disabled=false;alert(e.message||"Notification চালু করা যায়নি।")}}}
+function installReminderHomeLink(){if(!location.pathname.endsWith('/index.html')&&!location.pathname.endsWith('/'))return;document.querySelectorAll('[data-coming="Alarm"],[data-coming="Reminder"]').forEach(a=>{a.removeAttribute('data-coming');a.classList.remove('coming');a.setAttribute('href','./reminder.html');const small=a.querySelector('small');if(small)small.textContent='Reminder + Alarm চালু আছে'})}
+function install3DHomeLogin(){const style=document.createElement('style');style.id='sohochor-3d-buttons';style.textContent=`
+:root{--s3d:#063b27;--s3d2:#0a8b56;--s3dshadow:rgba(0,48,30,.30)}
+/* unified 3D visual language */
+.links a,.login,.head>a,.dark-btn,.quick a,.badge,.cta,.primary,button,.arr,.bottom a{position:relative;overflow:hidden;transition:transform .18s ease,box-shadow .18s ease,filter .18s ease!important}
+.links a,.login,.head>a,.dark-btn,.cta,.primary,button{border:1px solid rgba(255,255,255,.30)!important;border-radius:13px!important;box-shadow:inset 2px 2px 5px rgba(255,255,255,.40),inset -2px -3px 6px rgba(0,0,0,.14),0 5px 0 var(--s3dshadow),0 11px 20px rgba(0,50,32,.16)!important;font-weight:900!important}
+.links a[href="index.html"],.login{background:linear-gradient(145deg,#19aa6c,#075b3a 74%)!important;color:#fff!important;text-shadow:0 1px 2px #001b1066}
+.links a[href="index.html"]{display:inline-flex;align-items:center;justify-content:center;min-width:68px;padding:8px 13px}
+.login{display:inline-flex!important;align-items:center;justify-content:center;min-width:84px;padding:10px 17px!important;transform:perspective(220px) rotateX(2deg) translateY(-2px)}
+.links a:not([href="index.html"]){padding:8px 11px}
+.head>a{background:linear-gradient(145deg,#f5fff9,#d9f1e5)!important;color:#087b4c!important;padding:10px 15px}
+.badge{background:linear-gradient(145deg,#fff,#e9f4ef)!important;border:1px solid #d9e6df!important;border-radius:16px!important;box-shadow:inset 2px 2px 5px #fff,inset -2px -3px 5px #0000000c,4px 7px 13px #214c3a20!important}
+.cta,.dark-btn,.primary,button{background:linear-gradient(145deg,#ffffff,#e4f1eb);color:#075d3b}
+.dark-btn{box-shadow:inset 2px 2px 5px #fff,inset -2px -3px 5px #0002,0 5px 0 #022f2055,0 10px 18px #001b1038!important}
+.quick a{border:1px solid #dbe9e1!important;border-radius:13px!important;background:linear-gradient(145deg,#fff,#edf7f2)!important;box-shadow:inset 2px 2px 4px #fff,inset -2px -2px 4px #0001,0 4px 0 #00462d18,0 9px 15px #003c2812!important;font-weight:850}
+.arr{box-shadow:inset 2px 2px 4px #fff,inset -2px -2px 4px #0001,0 3px 0 #00462d18,0 6px 10px #003c2812!important}
+.card{box-shadow:inset 2px 2px 5px #fff,inset -3px -4px 8px #12372a0a,7px 11px 22px #173d2c18!important;transition:transform .2s ease,box-shadow .2s ease!important}
+.ico,.logo3d{box-shadow:inset 2px 2px 5px #fff,inset -3px -3px 6px #0002,5px 8px 15px #173d2c24!important}
+.bottom a{padding:7px 4px;border-radius:13px}
+.bottom a.active{background:linear-gradient(145deg,#f3fff9,#d9f1e5);box-shadow:inset 2px 2px 4px #fff,inset -2px -2px 4px #0001,0 4px 0 #087b4c18,3px 7px 11px #087b4c20!important}
+.links a:hover,.login:hover,.head>a:hover,.dark-btn:hover,.quick a:hover,.badge:hover,.cta:hover,.primary:hover,button:hover,.bottom a:hover,.arr:hover{transform:translateY(-4px)!important;filter:saturate(1.08) brightness(1.03)}
+.card:hover{transform:translateY(-7px) perspective(700px) rotateX(1deg)!important;box-shadow:inset 2px 2px 5px #fff,inset -3px -4px 8px #12372a12,9px 17px 30px #173d2c28!important}
+.links a:active,.login:active,.head>a:active,.dark-btn:active,.quick a:active,.badge:active,.cta:active,.primary:active,button:active,.bottom a:active,.arr:active{transform:translateY(3px)!important;box-shadow:inset 3px 3px 7px rgba(0,0,0,.20),0 2px 0 rgba(0,48,30,.34)!important}
+@media(max-width:850px){.links a{display:none!important}.login{min-width:84px;padding:10px 16px!important}.bottom a{display:block!important}}
+`;document.head.appendChild(style)}
+document.addEventListener("DOMContentLoaded",()=>{installReminderHomeLink();install3DHomeLogin();navigator.serviceWorker?.register("./sw.js").then(()=>installPushUI()).catch(()=>{})});
