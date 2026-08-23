@@ -8,7 +8,6 @@ async function installPushUI(){if(!pushSupported())return;const registration=awa
 function installReminderHomeLink(){if(!location.pathname.endsWith('/index.html')&&!location.pathname.endsWith('/'))return;document.querySelectorAll('[data-coming="Alarm"],[data-coming="Reminder"]').forEach(a=>{a.removeAttribute('data-coming');a.classList.remove('coming');a.setAttribute('href','./reminder.html');const small=a.querySelector('small');if(small)small.textContent='Reminder + Alarm চালু আছে'})}
 function install3DHomeLogin(){const style=document.createElement('style');style.id='sohochor-3d-buttons';style.textContent=`
 :root{--s3d:#063b27;--s3d2:#0a8b56;--s3dshadow:rgba(0,48,30,.30)}
-/* unified 3D visual language */
 .links a,.login,.head>a,.dark-btn,.quick a,.badge,.cta,.primary,button,.arr,.bottom a{position:relative;overflow:hidden;transition:transform .18s ease,box-shadow .18s ease,filter .18s ease!important}
 .links a,.login,.head>a,.dark-btn,.cta,.primary,button{border:1px solid rgba(255,255,255,.30)!important;border-radius:13px!important;box-shadow:inset 2px 2px 5px rgba(255,255,255,.40),inset -2px -3px 6px rgba(0,0,0,.14),0 5px 0 var(--s3dshadow),0 11px 20px rgba(0,50,32,.16)!important;font-weight:900!important}
 .links a[href="index.html"],.login{background:linear-gradient(145deg,#19aa6c,#075b3a 74%)!important;color:#fff!important;text-shadow:0 1px 2px #001b1066}
@@ -21,13 +20,19 @@ function install3DHomeLogin(){const style=document.createElement('style');style.
 .dark-btn{box-shadow:inset 2px 2px 5px #fff,inset -2px -3px 5px #0002,0 5px 0 #022f2055,0 10px 18px #001b1038!important}
 .quick a{border:1px solid #dbe9e1!important;border-radius:13px!important;background:linear-gradient(145deg,#fff,#edf7f2)!important;box-shadow:inset 2px 2px 4px #fff,inset -2px -2px 4px #0001,0 4px 0 #00462d18,0 9px 15px #003c2812!important;font-weight:850}
 .arr{box-shadow:inset 2px 2px 4px #fff,inset -2px -2px 4px #0001,0 3px 0 #00462d18,0 6px 10px #003c2812!important}
-.card{box-shadow:inset 2px 2px 5px #fff,inset -3px -4px 8px #12372a0a,7px 11px 22px #173d2c18!important;transition:transform .2s ease,box-shadow .2s ease!important}
+.card{box-shadow:inset 3px 3px 8px rgba(255,255,255,.95),inset -4px -5px 10px rgba(18,55,42,.08),7px 12px 22px rgba(23,61,44,.20)!important;transition:transform .2s ease,box-shadow .2s ease,filter .2s ease!important;transform:perspective(900px) rotateX(.5deg)}
+.card:before{content:"";position:absolute;inset:0 auto auto 0;width:65%;height:55%;border-radius:18px;background:linear-gradient(125deg,rgba(255,255,255,.60),transparent 62%);pointer-events:none;z-index:0}
+.card .ico,.card b,.card small,.card .arr{position:relative;z-index:1}
 .ico,.logo3d{box-shadow:inset 2px 2px 5px #fff,inset -3px -3px 6px #0002,5px 8px 15px #173d2c24!important}
+.card .ico{transform:perspective(500px) translateZ(8px);box-shadow:inset 3px 3px 6px rgba(255,255,255,.95),inset -3px -4px 7px rgba(0,0,0,.12),6px 9px 16px rgba(33,76,58,.20)!important}
+.card .arr{box-shadow:inset 2px 2px 4px #fff,inset -2px -2px 4px #0001,0 3px 0 #00462d18,0 6px 10px #003c2812!important}
 .bottom a{padding:7px 4px;border-radius:13px}
 .bottom a.active{background:linear-gradient(145deg,#f3fff9,#d9f1e5);box-shadow:inset 2px 2px 4px #fff,inset -2px -2px 4px #0001,0 4px 0 #087b4c18,3px 7px 11px #087b4c20!important}
 .links a:hover,.login:hover,.head>a:hover,.dark-btn:hover,.quick a:hover,.badge:hover,.cta:hover,.primary:hover,button:hover,.bottom a:hover,.arr:hover{transform:translateY(-4px)!important;filter:saturate(1.08) brightness(1.03)}
-.card:hover{transform:translateY(-7px) perspective(700px) rotateX(1deg)!important;box-shadow:inset 2px 2px 5px #fff,inset -3px -4px 8px #12372a12,9px 17px 30px #173d2c28!important}
+.card:hover{transform:perspective(900px) translateY(-8px) rotateX(2deg) rotateY(-.5deg)!important;filter:saturate(1.05);box-shadow:inset 3px 3px 8px rgba(255,255,255,.98),inset -4px -5px 10px rgba(18,55,42,.10),10px 20px 34px rgba(23,61,44,.30)!important}
 .links a:active,.login:active,.head>a:active,.dark-btn:active,.quick a:active,.badge:active,.cta:active,.primary:active,button:active,.bottom a:active,.arr:active{transform:translateY(3px)!important;box-shadow:inset 3px 3px 7px rgba(0,0,0,.20),0 2px 0 rgba(0,48,30,.34)!important}
+.card:active{transform:perspective(900px) translateY(2px) rotateX(1deg)!important;box-shadow:inset 4px 4px 10px rgba(0,0,0,.12),0 2px 0 rgba(0,48,30,.18)!important}
 @media(max-width:850px){.links a{display:none!important}.login{min-width:84px;padding:10px 16px!important}.bottom a{display:block!important}}
+@media(max-width:520px){.card{min-height:150px;border-radius:20px}.card:before{border-radius:20px}.card .ico{transform:perspective(500px) translateZ(6px)} }
 `;document.head.appendChild(style)}
 document.addEventListener("DOMContentLoaded",()=>{installReminderHomeLink();install3DHomeLogin();navigator.serviceWorker?.register("./sw.js").then(()=>installPushUI()).catch(()=>{})});
