@@ -1,7 +1,7 @@
 {
   "name": "SOHOCHOR — সহচর",
   "short_name": "SOHOCHOR",
-  "description": "দ্বীন, জ্ঞান, সেবা ও সমাজের জন্য একটি সহজ ডিজিটাল প্ল্যাটফর্ম",
+  "description": "News, Notices, Help Center, সহযোগিতা ও সাংগঠনিক তথ্য ব্যবস্থাপনার আধুনিক PWA",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
