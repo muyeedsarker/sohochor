@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#08783f"><title>Private Contact Directory</title>
+<style>
+body{font-family:system-ui,sans-serif;margin:0;background:#f3f6f4;color:#183b2b}.wrap{max-width:760px;margin:auto;padding:16px}.head{background:#08783f;color:#fff;border-radius:18px;padding:20px;text-align:center}.card{background:#fff;border-radius:16px;padding:16px;margin:12px 0;box-shadow:0 2px 8px #0001}input,button{box-sizing:border-box;width:100%;padding:12px;margin:6px 0;border-radius:10px;border:1px solid #cbd8d0;font-size:16px}button{background:#08783f;color:#fff;border:0}.danger{background:#b42318}.contact{border-top:1px solid #e5e7eb;padding-top:12px;margin-top:12px}.actions{display:flex;gap:8px}.actions a,.actions button{flex:1;text-align:center;text-decoration:none}.muted{color:#66756c;font-size:13px}.empty{text-align:center;padding:20px}
+</style></head>
+<body><main class="wrap"><a href="index.html">← হোম</a><section class="head"><h1>☎️ Private Contact Directory</h1><p>ব্যক্তিগত যোগাযোগের তথ্য নিজের ডিভাইসেই রাখুন</p></section>
+<div class="card"><h2>নতুন Contact</h2><input id="name" placeholder="নাম"><input id="phone" placeholder="ফোন নম্বর"><input id="note" placeholder="নোট / সাধারণ তথ্য"><button onclick="saveContact()">➕ সংরক্ষণ</button><p class="muted">তথ্য এই ব্রাউজারের local storage-এ রাখা হবে; কোনো server-এ পাঠানো হবে না।</p></div>
+<div class="card"><input id="search" placeholder="🔎 Contact খুঁজুন..." oninput="render()"><div id="list"></div></div></main>
+<script>
+const KEY='privateContacts_v1'; let contacts=JSON.parse(localStorage.getItem(KEY)||'[]');
+function save(){localStorage.setItem(KEY,JSON.stringify(contacts))}
+function saveContact(){const name=document.getElementById('name').value.trim(),phone=document.getElementById('phone').value.trim(),note=document.getElementById('note').value.trim();if(!name||!phone){alert('নাম ও ফোন নম্বর দিন।');return}contacts.unshift({id:Date.now(),name,phone,note});save();['name','phone','note'].forEach(id=>document.getElementById(id).value='');render()}
+function del(id){if(confirm('এই Contact মুছে ফেলবেন?')){contacts=contacts.filter(x=>x.id!==id);save();render()}}
+function render(){const q=document.getElementById('search').value.trim().toLowerCase();const a=contacts.filter(x=>(x.name+' '+x.phone+' '+x.note).toLowerCase().includes(q));document.getElementById('list').innerHTML=a.length?a.map(x=>`<div class="contact"><h3>${esc(x.name)}</h3><div>📱 ${esc(x.phone)}</div>${x.note?`<div class="muted">${esc(x.note)}</div>`:''}<div class="actions"><a href="tel:${esc(x.phone)}"><button>কল</button></a><a href="https://wa.me/${x.phone.replace(/\D/g,'')}" target="_blank"><button>WhatsApp</button></a><button class="danger" onclick="del(${x.id})">মুছুন</button></div></div>`).join(''):'<div class="empty">কোনো Contact নেই।</div>'}
+function esc(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}render();
+</script></body></html>
