@@ -51,4 +51,32 @@ function installReminderHomeLink(){
     const small=a.querySelector('small'); if(small) small.textContent='Reminder + Alarm চালু আছে';
   });
 }
-document.addEventListener("DOMContentLoaded", () => { installReminderHomeLink(); navigator.serviceWorker?.register("./sw.js").then(() => installPushUI()).catch(() => {}); });
+function install3DHomeLogin(){
+  const style=document.createElement('style');
+  style.id='sohochor-3d-buttons';
+  style.textContent=`
+    .links a[href="index.html"]{
+      display:inline-flex;align-items:center;justify-content:center;
+      min-width:68px;padding:8px 13px;border-radius:12px;
+      color:#fff;background:linear-gradient(145deg,#16a36a,#075735 72%);
+      border:1px solid #4fd39a66;
+      box-shadow:inset 2px 2px 5px #ffffff38,4px 6px 12px #001b1055;
+      transform:translateY(-1px);transition:transform .18s,box-shadow .18s;
+    }
+    .links a[href="index.html"]:hover{color:#fff;transform:translateY(-3px);box-shadow:inset 2px 2px 5px #ffffff44,5px 9px 16px #001b1066}
+    .login{
+      display:inline-flex!important;align-items:center;justify-content:center;
+      min-width:78px;padding:10px 17px!important;border-radius:13px!important;
+      color:#fff!important;background:linear-gradient(145deg,#18a86b,#075a39 72%)!important;
+      border:1px solid #55dba266!important;
+      box-shadow:inset 2px 2px 6px #ffffff40,5px 7px 14px #001b1055,0 0 0 1px #043b2844!important;
+      text-shadow:0 1px 2px #001b1066;transform:perspective(180px) rotateX(2deg) translateY(-1px);
+      transition:transform .18s,box-shadow .18s;
+    }
+    .login:hover{transform:perspective(180px) rotateX(2deg) translateY(-3px) scale(1.02)!important;box-shadow:inset 2px 2px 6px #ffffff4d,6px 10px 18px #001b1066,0 0 0 1px #043b2855!important}
+    .login:active,.links a[href="index.html"]:active{transform:translateY(1px)!important;box-shadow:inset 3px 3px 7px #001b1040,2px 3px 7px #001b1055!important}
+    @media(max-width:850px){.links a[href="index.html"]{display:none}}
+  `;
+  document.head.appendChild(style);
+}
+document.addEventListener("DOMContentLoaded", () => { installReminderHomeLink(); install3DHomeLogin(); navigator.serviceWorker?.register("./sw.js").then(() => installPushUI()).catch(() => {}); });
