@@ -1,0 +1,9 @@
+(()=>{
+const CATS=[
+['all','🟢 সব ইসলামি কুইজ'],['দ্বীন','🕌 দ্বীন'],['কুরআন','📖 কুরআন'],['হাদিস','📜 হাদিস'],['সীরাত','🕋 সীরাত'],['সাহাবায়ে কেরাম','👳 সাহাবায়ে কেরাম'],['সাহাবিয়াত','👩 সাহাবিয়াত'],['নবী-রাসূল','🌟 নবী-রাসূল'],['আকিদাহ','🧠 আকিদাহ'],['ফিকহ','⚖️ ফিকহ'],['নামাজ','🧎 নামাজ'],['রোজা','🌙 রোজা'],['যাকাত','💰 যাকাত'],['হজ ও উমরাহ','🕋 হজ ও উমরাহ'],['দোয়া ও যিকির','🤲 দোয়া ও যিকির'],['তাসবিহ','📿 তাসবিহ'],['আখলাক','❤️ আখলাক ও চরিত্র'],['পরিবার','👨‍👩‍👧 পরিবার ও ইসলাম'],['মসজিদ','🕌 মসজিদ'],['ইসলামি মাস','📅 ইসলামি মাস ও তারিখ'],['রমজান','🌙 রমজান'],['কুরবানি','🐑 কুরবানি'],['ইসলামি ইতিহাস','📚 ইসলামি ইতিহাস'],['ইসলামি যুদ্ধ','⚔️ ইসলামের যুদ্ধ ও অভিযান'],['ইসলামি সভ্যতা','🏛️ ইসলামি সভ্যতা'],['আরবি','🗣️ আরবি ও কুরআনিক শব্দ'],['তাফসির','📜 কুরআনের তাফসির'],['দাওয়াহ','🌟 দাওয়াহ ও ইসলামী আন্দোলন'],['জামায়াতে ইসলামী','🟢 জামায়াতে ইসলামী'],['মিশ্র ইসলামি','☪️ ইসলামি জ্ঞান মিশ্র কুইজ']
+];
+const boot=()=>{const f=document.getElementById('filters');if(!f)return setTimeout(boot,150);if(f.dataset.sohochor30==='1')return;f.dataset.sohochor30='1';f.innerHTML='';
+CATS.forEach(([cat,label])=>{const b=document.createElement('button');b.type='button';b.className='filter'+(cat==='all'?' active':'');b.dataset.cat=cat;b.textContent=label;b.addEventListener('click',()=>{f.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');localStorage.setItem('sohochorQuizCategory',cat);document.dispatchEvent(new CustomEvent('sohochor:category',{detail:{category:cat,label}}));const title=document.getElementById('selected-category');if(title)title.textContent='🎯 '+label;});f.appendChild(b)});
+const saved=localStorage.getItem('sohochorQuizCategory')||'all';const b=[...f.children].find(x=>x.dataset.cat===saved)||f.children[0];b.click();
+};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
