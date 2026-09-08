@@ -1,7 +1,7 @@
 {
   "name": "SOHOCHOR — সহচর",
   "short_name": "SOHOCHOR",
-  "description": "News, Notices, Help Center, সহযোগিতা ও সাংগঠনিক তথ্য ব্যবস্থাপনার আধুনিক PWA",
+  "description": "কুরআন, হাদিস, নামাজ, দোয়া, ইসলামি শিক্ষা, সেবা ও দৈনন্দিন সহায়তার আধুনিক PWA",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -10,8 +10,15 @@
   "orientation": "portrait",
   "lang": "bn-BD",
   "dir": "ltr",
+  "categories": ["education", "lifestyle", "social"],
+  "prefer_related_applications": false,
   "icons": [
-    {"src":"icon-192.svg","sizes":"192x192","type":"image/svg+xml","purpose":"any"},
-    {"src":"icon-512.svg","sizes":"512x512","type":"image/svg+xml","purpose":"any"}
+    {"src":"icon-192.svg","sizes":"192x192","type":"image/svg+xml","purpose":"any maskable"},
+    {"src":"icon-512.svg","sizes":"512x512","type":"image/svg+xml","purpose":"any maskable"}
+  ],
+  "shortcuts": [
+    {"name":"আজকের ইসলাম","short_name":"আজকের ইসলাম","url":"./today-islam.html","icons":[{"src":"icon-192.svg","sizes":"192x192","type":"image/svg+xml"}]},
+    {"name":"কুরআন","short_name":"কুরআন","url":"./quran.html","icons":[{"src":"icon-192.svg","sizes":"192x192","type":"image/svg+xml"}]},
+    {"name":"আযান","short_name":"আযান","url":"./azan.html","icons":[{"src":"icon-192.svg","sizes":"192x192","type":"image/svg+xml"}]}
   ]
 }
