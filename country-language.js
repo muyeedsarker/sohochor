@@ -1,104 +1,29 @@
-/* SOHOCHOR Country + Language v2 — reliable selector */
+/* SOHOCHOR Country + Language v3 — safe, persistent, non-destructive */
 (function(){
   'use strict';
-  if(window.__SOHOCHOR_LOCALE_V2__) return;
-  window.__SOHOCHOR_LOCALE_V2__=true;
+  if(window.__SOHOCHOR_LOCALE_V3__) return;
+  window.__SOHOCHOR_LOCALE_V3__=true;
 
-  const countries=[
-    ['ALL','🌍 সব দেশ'],['BD','🇧🇩 বাংলাদেশ'],['SA','🇸🇦 সৌদি আরব'],['AE','🇦🇪 সংযুক্ত আরব আমিরাত'],
-    ['QA','🇶🇦 কাতার'],['KW','🇰🇼 কুয়েত'],['OM','🇴🇲 ওমান'],['MY','🇲🇾 মালয়েশিয়া'],['SG','🇸🇬 সিঙ্গাপুর'],
-    ['GB','🇬🇧 যুক্তরাজ্য'],['US','🇺🇸 যুক্তরাষ্ট্র'],['CA','🇨🇦 কানাডা'],['AU','🇦🇺 অস্ট্রেলিয়া'],
-    ['IN','🇮🇳 ভারত'],['PK','🇵🇰 পাকিস্তান']
-  ];
+  const countries=[['ALL','🌍 সব দেশ'],['BD','🇧🇩 বাংলাদেশ'],['SA','🇸🇦 সৌদি আরব'],['AE','🇦🇪 সংযুক্ত আরব আমিরাত'],['QA','🇶🇦 কাতার'],['KW','🇰🇼 কুয়েত'],['OM','🇴🇲 ওমান'],['MY','🇲🇾 মালয়েশিয়া'],['SG','🇸🇬 সিঙ্গাপুর'],['GB','🇬🇧 যুক্তরাজ্য'],['US','🇺🇸 যুক্তরাষ্ট্র'],['CA','🇨🇦 কানাডা'],['AU','🇦🇺 অস্ট্রেলিয়া'],['IN','🇮🇳 ভারত'],['PK','🇵🇰 পাকিস্তান']];
   const languages=[['ALL','🌐 সব ভাষা'],['bn','বাংলা'],['en','English'],['ar','العربية'],['hi','हिन्दी'],['ur','اردو'],['ms','Bahasa Melayu']];
-  const countryName=Object.fromEntries(countries);
+  const countryName=Object.fromEntries(countries), languageName=Object.fromEntries(languages);
   const tr={
-    en:{'হোম':'Home','সেবা সমূহ':'Services','কুরআন ও হাদিস':'Quran & Hadith','নামাজের সময়':'Prayer Times','কিবলা ফাইন্ডার':'Qibla Finder','আরো':'More','লগইন':'Login','নিবন্ধন':'Sign Up','দ্বীন, জ্ঞান, সেবা ও সমাজ':'Faith, Knowledge, Service & Community'},
-    ar:{'হোম':'الرئيسية','সেবা সমূহ':'الخدمات','কুরআন ও হাদিস':'القرآن والحديث','নামাজের সময়':'أوقات الصلاة','কিবলা ফাইন্ডার':'محدد القبلة','আরো':'المزيد','লগইন':'تسجيل الدخول','নিবন্ধন':'إنشاء حساب'},
-    hi:{'হোম':'होम','সেবা সমূহ':'सेवाएँ','কুরআন ও হাদিস':'कुरआन और हदीस','নামাজের সময়':'नमाज़ का समय','কিবলা ফাইন্ডার':'क़िबला फ़ाइंडर','আরো':'और','লগইন':'लॉगिन','নিবন্ধন':'साइन अप'},
-    ur:{'হোম':'ہوم','সেবা সমূহ':'خدمات','কুরআন ও হাদিস':'قرآن و حدیث','নামাজের সময়':'نماز کے اوقات','কিবলা ফাইন্ডার':'قبلہ فائنڈر','আরো':'مزید','লগইন':'لاگ اِن','নিবন্ধন':'سائن اپ'},
-    ms:{'হোম':'Laman Utama','সেবা সমূহ':'Perkhidmatan','কুরআন ও হাদিস':'Al-Quran & Hadis','নামাজের সময়':'Waktu Solat','কিবলা ফাইন্ডার':'Pencari Kiblat','আরো':'Lagi','লগইন':'Log Masuk','নিবন্ধন':'Daftar'}
+    en:{'হোম':'Home','সেবা সমূহ':'Services','কুরআন ও হাদিস':'Quran & Hadith','নামাজের সময়':'Prayer Times','কিবলা ফাইন্ডার':'Qibla Finder','আরো':'More','লগইন':'Login','নিবন্ধন':'Sign Up','দ্বীন, জ্ঞান, সেবা ও সমাজ':'Faith, Knowledge, Service & Community','আমার সহচর':'My Companion','ইসলামি Quiz':'Islamic Quiz','রক্তদান':'Blood Donation','জরুরি সহায়তা':'Emergency Help','নোটস':'Notes','তসবীহ':'Tasbih','সব ফিচার':'All Features'},
+    ar:{'হোম':'الرئيسية','সেবা সমূহ':'الخدمات','কুরআন ও হাদিস':'القرآن والحديث','নামাজের সময়':'أوقات الصلاة','কিবলা ফাইন্ডার':'محدد القبلة','আরো':'المزيد','লগইন':'تسجيل الدخول','নিবন্ধন':'إنشاء حساب','আমার সহচর':'رفيقي','রক্তদান':'التبرع بالدم','জরুরি সহায়তা':'مساعدة الطوارئ','নোটস':'ملاحظات','তসবীহ':'تسبيح','সব ফিচার':'كل الميزات'},
+    hi:{'হোম':'होम','সেবা সমূহ':'सेवाएँ','কুরআন ও হাদিস':'कुरआन और हदीस','নামাজের সময়':'नमाज़ का समय','কিবলা ফাইন্ডার':'क़िबला फ़ाइंडर','আরো':'और','লগইন':'लॉगिन','নিবন্ধন':'साइन अप','আমার সহচর':'मेरा साथी','রক্তদান':'रक्तदान','জরুরি সহায়তা':'आपातकालीन सहायता','নোটস':'नोट्स','তসবীহ':'तस्बीह','সব ফিচার':'सभी फीचर्स'},
+    ur:{'হোম':'ہوم','সেবা সমূহ':'خدمات','কুরআন ও হাদিস':'قرآن و حدیث','নামাজের সময়':'نماز کے اوقات','কিবলা ফাইন্ডার':'قبلہ فائنڈر','আরো':'مزید','লগইন':'لاگ اِن','নিবন্ধন':'سائن اپ','আমার সহচর':'میرا ساتھی','রক্তদান':'خون کا عطیہ','জরুরি সহায়তা':'ہنگامی مدد','নোটস':'نوٹس','তসবীহ':'تسبیح','সব ফিচার':'تمام خصوصیات'},
+    ms:{'হোম':'Laman Utama','সেবা সমূহ':'Perkhidmatan','কুরআন ও হাদিস':'Al-Quran & Hadis','নামাজের সময়':'Waktu Solat','কিবলা ফাইন্ডার':'Pencari Kiblat','আরো':'Lagi','লগইন':'Log Masuk','নিবন্ধন':'Daftar','আমার সহচর':'Sahabat Saya','রক্তদান':'Derma Darah','জরুরি সহায়তা':'Bantuan Kecemasan','নোটস':'Nota','তসবীহ':'Tasbih','সব ফিচার':'Semua Ciri'}
   };
 
   function addStyle(){
     if(document.getElementById('sohochor-locale-style')) return;
-    const s=document.createElement('style'); s.id='sohochor-locale-style';
-    s.textContent=`#sohochor-country-language{display:block!important;width:100%;position:relative;z-index:99999;background:#fff;border-bottom:1px solid #dbe9e1;box-shadow:0 4px 14px rgba(0,0,0,.10);padding:10px 12px;font-family:inherit}#sohochor-country-language .sl-row{max-width:1180px;margin:0 auto;display:flex;gap:10px;align-items:center;justify-content:center}.sl-select{display:block!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;appearance:auto!important;width:min(45vw,260px);min-width:150px;height:44px;padding:0 12px;border:2px solid #087a4a;border-radius:12px;background:#f7fbf9;color:#12392b;font-weight:800;font-size:14px;cursor:pointer}.sl-select:focus{outline:3px solid rgba(8,122,74,.16)}#sohochor-locale-status{max-width:1180px;margin:7px auto 0;text-align:center;color:#087a4a;font-size:12px;font-weight:900}@media(max-width:520px){#sohochor-country-language{padding:8px}.sl-row{gap:6px!important}.sl-select{width:50%;min-width:0;height:42px;font-size:12px}}`;
-    document.head.appendChild(s);
+    const s=document.createElement('style');s.id='sohochor-locale-style';s.textContent='#sohochor-country-language{display:block!important;width:100%;position:relative;z-index:99999;background:#fff;border-bottom:1px solid #dbe9e1;box-shadow:0 4px 14px rgba(0,0,0,.10);padding:10px 12px;font-family:inherit}#sohochor-country-language .sl-row{max-width:1180px;margin:0 auto;display:flex;gap:10px;align-items:center;justify-content:center}.sl-select{display:block!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;appearance:auto!important;width:min(45vw,260px);min-width:150px;height:44px;padding:0 12px;border:2px solid #087a4a;border-radius:12px;background:#f7fbf9;color:#12392b;font-weight:800;font-size:14px;cursor:pointer}.sl-select:focus{outline:3px solid rgba(8,122,74,.16)}#sohochor-locale-status{max-width:1180px;margin:7px auto 0;text-align:center;color:#087a4a;font-size:12px;font-weight:900}@media(max-width:520px){#sohochor-country-language{padding:8px}.sl-row{gap:6px!important}.sl-select{width:50%;min-width:0;height:42px;font-size:12px}}';document.head.appendChild(s);
   }
-
-  function makeSelect(id,items){
-    const el=document.createElement('select'); el.id=id; el.className='sl-select';
-    items.forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;el.appendChild(o)});
-    return el;
-  }
-
-  function rememberOriginals(){
-    document.querySelectorAll('body *:not(#sohochor-country-language):not(#sohochor-country-language *)').forEach(el=>{
-      if(el.children.length===0 && !el.hasAttribute('data-sohochor-original')) el.setAttribute('data-sohochor-original',el.textContent.trim());
-    });
-  }
-
-  function translate(lang){
-    rememberOriginals();
-    const map=tr[lang]||{};
-    document.querySelectorAll('[data-sohochor-original]').forEach(el=>{
-      const original=el.getAttribute('data-sohochor-original')||'';
-      el.textContent=(lang==='ALL'||!map[original])?original:map[original];
-    });
-    document.documentElement.dir=(lang==='ar'||lang==='ur')?'rtl':'ltr';
-    if(lang!=='ALL' && map['হোম']) document.title=map['হোম']+' — SOHOCHOR';
-    else document.title='SOHOCHOR — সহচর';
-  }
-
-  function apply(){
-    const country=localStorage.getItem('sohochorCountry')||'ALL';
-    const language=localStorage.getItem('sohochorLanguage')||'ALL';
-    document.documentElement.dataset.country=country;
-    document.documentElement.dataset.language=language;
-    document.body.dataset.country=country;
-    document.body.dataset.language=language;
-
-    document.querySelectorAll('[data-country]').forEach(el=>{
-      const allowed=(el.dataset.country||'ALL').split(',').map(x=>x.trim());
-      el.hidden=!(country==='ALL'||allowed.includes('ALL')||allowed.includes(country));
-    });
-    document.querySelectorAll('[data-language]').forEach(el=>{
-      const allowed=(el.dataset.language||'ALL').split(',').map(x=>x.trim());
-      el.hidden=!(language==='ALL'||allowed.includes('ALL')||allowed.includes(language));
-    });
-
-    const status=document.getElementById('sohochor-locale-status');
-    if(status) status.textContent='📍 '+(countryName[country]||country)+'  •  🌐 '+(languages.find(x=>x[0]===language)?.[1]||'সব ভাষা');
-    translate(language);
-    document.dispatchEvent(new CustomEvent('sohochor:localechange',{detail:{country,language}}));
-  }
-
-  function place(box){
-    const header=document.querySelector('.top');
-    if(header && header.parentNode){header.insertAdjacentElement('afterend',box);return;}
-    const head=document.querySelector('.head');
-    if(head && head.parentNode){head.insertAdjacentElement('afterend',box);return;}
-    document.body.insertBefore(box,document.body.firstChild);
-  }
-
-  function init(){
-    addStyle();
-    let box=document.getElementById('sohochor-country-language');
-    if(!box){
-      box=document.createElement('section'); box.id='sohochor-country-language'; box.setAttribute('aria-label','Country and language selection');
-      const row=document.createElement('div'); row.className='sl-row';
-      const c=makeSelect('sohochor-country',countries); const l=makeSelect('sohochor-language',languages);
-      const status=document.createElement('div'); status.id='sohochor-locale-status';
-      row.append(c,l); box.append(row,status); place(box);
-      c.addEventListener('change',function(){localStorage.setItem('sohochorCountry',c.value);apply();});
-      l.addEventListener('change',function(){localStorage.setItem('sohochorLanguage',l.value);apply();});
-    }
-    const c=document.getElementById('sohochor-country'); const l=document.getElementById('sohochor-language');
-    if(c)c.value=localStorage.getItem('sohochorCountry')||'ALL';
-    if(l)l.value=localStorage.getItem('sohochorLanguage')||'ALL';
-    apply();
-  }
-
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init,{once:true}); else init();
+  function makeSelect(id,items){const el=document.createElement('select');el.id=id;el.className='sl-select';el.setAttribute('aria-label',id==='sohochor-country'?'Country':'Language');items.forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;el.appendChild(o)});return el;}
+  function rememberOriginals(){document.querySelectorAll('body *:not(#sohochor-country-language):not(#sohochor-country-language *):not(script):not(style):not(select):not(option):not(input):not(textarea)').forEach(el=>{if(el.children.length===0&&!el.hasAttribute('data-sohochor-original'))el.setAttribute('data-sohochor-original',el.textContent.trim())});}
+  function translate(lang){rememberOriginals();const map=tr[lang]||{};document.querySelectorAll('[data-sohochor-original]').forEach(el=>{const original=el.getAttribute('data-sohochor-original')||'';if(!original)return;el.textContent=lang==='ALL'?original:(map[original]||original)});document.documentElement.lang=lang==='ALL'?'bn':lang;document.documentElement.dir=(lang==='ar'||lang==='ur')?'rtl':'ltr';}
+  function apply(){const country=localStorage.getItem('sohochorCountry')||'ALL';const language=localStorage.getItem('sohochorLanguage')||'ALL';document.documentElement.dataset.country=country;document.documentElement.dataset.language=language;document.body.dataset.country=country;document.body.dataset.language=language;document.querySelectorAll('[data-country]').forEach(el=>{const allowed=(el.dataset.country||'ALL').split(',').map(x=>x.trim());el.hidden=!(country==='ALL'||allowed.includes('ALL')||allowed.includes(country))});document.querySelectorAll('[data-language]').forEach(el=>{const allowed=(el.dataset.language||'ALL').split(',').map(x=>x.trim());el.hidden=!(language==='ALL'||allowed.includes('ALL')||allowed.includes(language))});const status=document.getElementById('sohochor-locale-status');if(status)status.textContent='📍 '+(countryName[country]||country)+'  •  🌐 '+(languageName[language]||languageName.ALL);translate(language);document.dispatchEvent(new CustomEvent('sohochor:localechange',{detail:{country,language}}));}
+  function place(box){const header=document.querySelector('.top');if(header&&header.parentNode){header.insertAdjacentElement('afterend',box);return}const head=document.querySelector('.head');if(head&&head.parentNode){head.insertAdjacentElement('afterend',box);return}document.body.insertBefore(box,document.body.firstChild)}
+  function init(){addStyle();let box=document.getElementById('sohochor-country-language');if(!box){box=document.createElement('section');box.id='sohochor-country-language';box.setAttribute('aria-label','Country and language selection');const row=document.createElement('div');row.className='sl-row';const c=makeSelect('sohochor-country',countries),l=makeSelect('sohochor-language',languages),status=document.createElement('div');status.id='sohochor-locale-status';row.append(c,l);box.append(row,status);place(box);c.addEventListener('change',()=>{localStorage.setItem('sohochorCountry',c.value);apply()});l.addEventListener('change',()=>{localStorage.setItem('sohochorLanguage',l.value);apply()})}const c=document.getElementById('sohochor-country'),l=document.getElementById('sohochor-language');if(c)c.value=localStorage.getItem('sohochorCountry')||'ALL';if(l)l.value=localStorage.getItem('sohochorLanguage')||'ALL';apply()}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
