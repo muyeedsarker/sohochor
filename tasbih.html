@@ -3,50 +3,51 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#08783f">
-<title>তসবীহ — SOHOCHOR</title>
+<meta name="theme-color" content="#061b13">
+<title>Digital Tasbih — SOHOCHOR</title>
 <link rel="manifest" href="./manifest.json">
 <link rel="stylesheet" href="theme.css?v=6">
 <style>
-body{background:#f3f4f6}.wrap{max-width:620px;margin:auto;padding:12px}.back{display:inline-block;margin:4px 0 10px;text-decoration:none;font-weight:800;color:#08783f}.head{background:#08783f;color:#fff;border-radius:18px;padding:16px;text-align:center;margin-bottom:10px}.head h1{margin:0 0 4px;font-size:25px}.head p{margin:0;font-size:13px;opacity:.9}.target{background:#fff;border-radius:14px;padding:10px;margin-bottom:10px;text-align:center}.target b{margin-right:6px}.target button{border:1px solid #ddd;background:#fff;border-radius:9px;padding:8px 11px;margin:3px;font-weight:800}.target button.active{background:#08783f;color:#fff;border-color:#08783f}.zikr{background:#fff;border-radius:16px;padding:14px;margin-bottom:10px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,.06)}.zikr h2{margin:0 0 2px;font-size:21px}.arabic{font-size:23px;line-height:1.6;color:#174d35}.counter{font-size:32px;font-weight:900;margin:4px 0 8px}.count{width:100%;min-height:70px;border:0;border-radius:14px;background:#08783f;color:#fff;font-size:22px;font-weight:900;touch-action:manipulation}.count:active{transform:scale(.98)}.reset{margin-top:7px;border:0;border-radius:9px;padding:7px 14px;background:#eee;font-weight:700}.done{font-size:13px;color:#08783f;font-weight:800;min-height:18px}.footer{text-align:center;background:#fff;border-radius:14px;padding:12px;margin-top:4px}.total{font-size:16px;font-weight:800}.hint{font-size:12px;color:#666;margin-top:5px}
+*{box-sizing:border-box}body{margin:0;background:#07140f;color:#eef8f2;font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif}.app{max-width:620px;margin:auto;padding:12px 12px 28px}.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.back{color:#b8f2cf;text-decoration:none;font-weight:800}.brand{font-size:12px;opacity:.7}.hero{background:linear-gradient(145deg,#0d3a28,#09251b);border:1px solid #245b43;border-radius:24px;padding:20px 16px;text-align:center;box-shadow:0 12px 35px rgba(0,0,0,.3)}.hero h1{margin:0;font-size:25px}.subtitle{font-size:12px;opacity:.7;margin-top:4px}.dial{width:205px;height:205px;margin:18px auto 14px;border-radius:50%;padding:10px;background:conic-gradient(#56d89a var(--p),#173b2c 0);box-shadow:0 0 0 8px #0b2118,0 10px 35px rgba(0,0,0,.35)}.dial-inner{height:100%;border-radius:50%;background:#061810;display:flex;flex-direction:column;align-items:center;justify-content:center}.number{font-size:58px;line-height:1;font-weight:950;letter-spacing:-2px}.of{font-size:14px;opacity:.65;margin-top:6px}.targetbar{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}.targetbar button{border:1px solid #315b48;background:#10271e;color:#d9f5e5;border-radius:20px;padding:7px 12px;font-weight:800}.targetbar button.active{background:#56d89a;color:#062116;border-color:#56d89a}.zikrname{font-size:22px;font-weight:900;margin-top:12px}.arabic{font-size:24px;line-height:1.7;color:#d4f3df}.tap{width:100%;height:105px;margin-top:10px;border:0;border-radius:22px;background:linear-gradient(145deg,#56d89a,#239b68);color:#052116;font-size:27px;font-weight:950;box-shadow:0 8px 0 #176946;touch-action:manipulation}.tap:active{transform:translateY(5px);box-shadow:0 3px 0 #176946}.quick{display:flex;gap:7px;margin-top:14px}.quick button{flex:1;border:1px solid #315b48;background:#0d2119;color:#dff7e9;border-radius:13px;padding:10px 5px;font-weight:800}.quick button.active{border-color:#56d89a;color:#56d89a}.cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.card{border:1px solid #244b3a;background:#0c2018;border-radius:14px;padding:10px;text-align:center}.card small{display:block;opacity:.6}.card b{font-size:20px}.tools{display:flex;gap:8px;margin-top:10px}.tools button{flex:1;border:1px solid #315b48;background:#0d2119;color:#e7f8ee;border-radius:12px;padding:10px;font-weight:800}.reset{color:#ffd2d2!important;border-color:#694141!important}.done{min-height:20px;color:#7ff0b4;font-size:13px;font-weight:800;margin-top:6px}.tip{text-align:center;font-size:11px;opacity:.55;margin-top:12px}
 </style>
 </head>
 <body>
-<main class="wrap">
-<a class="back" href="index.html">← হোমে ফিরে যান</a>
-<section class="head"><h1>📿 তসবীহ পাঠ</h1><p>সহজে চাপুন, পাঠ গুনুন</p></section>
-<section class="target"><b>টার্গেট:</b><span id="targets"></span></section>
-<div id="list"></div>
-<section class="footer"><div class="total" id="dailyTotal">আজকের মোট পাঠ: ০</div><div class="hint">টার্গেট পূর্ণ হলে টোন ও ভাইব্রেশন সতর্কতা হবে।</div></section>
+<main class="app">
+<div class="top"><a class="back" href="index.html">← হোম</a><span class="brand">SOHOCHOR • DIGITAL TASBIH</span></div>
+<section class="hero" id="hero">
+<h1>📿 Digital Tasbih</h1><div class="subtitle">সহজে ট্যাপ করুন • হিসাব অটো-সেভ হবে</div>
+<div class="dial" id="dial"><div class="dial-inner"><div class="number" id="num">০</div><div class="of" id="of">/ ৩৩</div></div></div>
+<div class="targetbar" id="targets"></div>
+<div class="zikrname" id="name"></div><div class="arabic" id="arabic"></div>
+<button class="tap" id="tap">📿 ট্যাপ করে পাঠ করুন</button>
+<div class="done" id="done"></div>
+<div class="quick" id="quick"></div>
+</section>
+<section class="cards"><div class="card"><small>আজকের মোট</small><b id="total">০</b></div><div class="card"><small>বর্তমান লক্ষ্য</small><b id="targetText">৩৩</b></div></section>
+<div class="tools"><button id="sound">🔊 শব্দ: চালু</button><button id="vibe">📳 ভাইব্রেশন: চালু</button></div>
+<div class="tools"><button class="reset" id="reset">↺ বর্তমান রিসেট</button><button id="allReset">⟳ সব রিসেট</button></div>
+<div class="tip">লক্ষ্য পূর্ণ হলে হালকা টোন ও ভাইব্রেশন হবে। ব্রাউজার/ফোনের সেটিংস অনুযায়ী শব্দ বা ভাইব্রেশন কাজ করতে পারে।</div>
 </main>
 <script>
-const zikrs=[
-{name:'সুবহানাল্লাহ',arabic:'سُبْحَانَ اللَّهِ'},
-{name:'আলহামদুলিল্লাহ',arabic:'الْحَمْدُ لِلَّهِ'},
-{name:'আল্লাহু আকবার',arabic:'اللَّهُ أَكْبَرُ'},
-{name:'লা ইলাহা ইল্লাল্লাহ',arabic:'لَا إِلٰهَ إِلَّا اللَّهُ'},
-{name:'আস্তাগফিরুল্লাহ',arabic:'أَسْتَغْفِرُ اللَّهُ'},
-{name:'দরুদ শরীফ',arabic:'اللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ'}
-];
-const key='sohochor_tasbih_v1';
-let state=JSON.parse(localStorage.getItem(key)||'{}');
-let target=Number(state.target||33);
-const targetOptions=[33,100,500,1000];
+const zikrs=[['সুবহানাল্লাহ','سُبْحَانَ اللَّهِ'],['আলহামদুলিল্লাহ','الْحَمْدُ لِلَّهِ'],['আল্লাহু আকবার','اللَّهُ أَكْبَرُ'],['লা ইলাহা ইল্লাল্লাহ','لَا إِلٰهَ إِلَّا اللَّهُ'],['আস্তাগফিরুল্লাহ','أَسْتَغْفِرُ اللَّهُ'],['দরুদ শরীফ','اللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ']];
+const opts=[33,100,500,1000],key='sohochor_tasbih_v1';let s=JSON.parse(localStorage.getItem(key)||'{}');let target=Number(s.target||33),current=Number(s.current||0),sound=s.sound!==false,vibe=s.vibe!==false;
 function bn(n){return Number(n).toLocaleString('bn-BD')}
-function save(){state.target=target;localStorage.setItem(key,JSON.stringify(state))}
-function vibrate(){try{if(navigator.vibrate)return navigator.vibrate([180,80,180,80,300])}catch(e){}return false}
-function tone(){try{const A=window.AudioContext||window.webkitAudioContext;if(!A)return;const c=new A(),n=c.currentTime;[660,880,660].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain(),t=n+i*.16;o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.2,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+.12);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+.13)})}catch(e){}}
-function alertReached(){tone();vibrate()}
-function renderTargets(){document.getElementById('targets').innerHTML=targetOptions.map(x=>`<button class="${x===target?'active':''}" onclick="setTarget(${x})">${bn(x)}</button>`).join('')}
+function save(){s.target=target;s.current=current;s.sound=sound;s.vibe=vibe;s.active=s.active||0;localStorage.setItem(key,JSON.stringify(s))}
+function active(){return Number(s.active||0)}
+function vibrate(){if(!vibe)return;try{if(navigator.vibrate)navigator.vibrate([80,40,80])}catch(e){}}
+function tone(){if(!sound)return;try{const A=window.AudioContext||window.webkitAudioContext;if(!A)return;const c=new A(),o=c.createOscillator(),g=c.createGain();o.frequency.value=760;g.gain.value=.12;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.12)}catch(e){}}
+function completeTone(){if(sound)tone();if(vibe)try{navigator.vibrate&&navigator.vibrate([180,70,180,70,350])}catch(e){}}
 function render(){
-renderTargets();
-document.getElementById('list').innerHTML=zikrs.map((z,i)=>{const c=Math.min(Number(state['c'+i]||0),target);return `<section class="zikr"><h2>${z.name}</h2><div class="arabic">${z.arabic}</div><div class="counter" id="c${i}">${bn(c)} / ${bn(target)}</div><button class="count" onclick="count(${i})">📿 পাঠ করেছি</button><div class="done" id="d${i}">${c>=target?'✓ টার্গেট পূর্ণ':''}</div><button class="reset" onclick="resetCount(${i})">↺ রিসেট</button></section>`}).join('');
-updateTotal();
-}
-function setTarget(x){target=x;save();render()}
-function count(i){const k='c'+i,old=Math.min(Number(state[k]||0),target);if(old>=target){alertReached();return}const next=old+1;state[k]=next;save();document.getElementById('c'+i).textContent=bn(next)+' / '+bn(target);document.getElementById('d'+i).textContent=next>=target?'✓ টার্গেট পূর্ণ':'';if(next===target)alertReached();updateTotal()}
-function resetCount(i){state['c'+i]=0;save();document.getElementById('c'+i).textContent='০ / '+bn(target);document.getElementById('d'+i).textContent='';updateTotal()}
-function updateTotal(){const total=zikrs.reduce((s,_,i)=>s+Number(state['c'+i]||0),0);document.getElementById('dailyTotal').textContent='আজকের মোট পাঠ: '+bn(total)}
+const i=active(),z=zikrs[i];document.getElementById('name').textContent=z[0];document.getElementById('arabic').textContent=z[1];document.getElementById('num').textContent=bn(current);document.getElementById('of').textContent='/ '+bn(target);document.getElementById('targetText').textContent=bn(target);document.getElementById('dial').style.setProperty('--p',Math.min(current/target*100,100)+'%');document.getElementById('total').textContent=bn(total());document.getElementById('done').textContent=current>=target?'✓ লক্ষ্য পূর্ণ — আবার ট্যাপ করলে সতর্কতা হবে':'';
+document.getElementById('targets').innerHTML=opts.map(x=>`<button class="${x===target?'active':''}" onclick="setTarget(${x})">${bn(x)}</button>`).join('');document.getElementById('quick').innerHTML=zikrs.map((x,j)=>`<button class="${j===i?'active':''}" onclick="setZikr(${j})">${x[0]}</button>`).join('');document.getElementById('sound').textContent='🔊 শব্দ: '+(sound?'চালু':'বন্ধ');document.getElementById('vibe').textContent='📳 ভাইব্রেশন: '+(vibe?'চালু':'বন্ধ')}
+function total(){return zikrs.reduce((a,_,i)=>a+Number(s['c'+i]||0),0)}
+function setZikr(i){s.active=i;current=Number(s['c'+i]||0);save();render()}
+function setTarget(x){target=x;current=Math.min(Number(s['c'+active()]||0),target);save();render()}
+function tap(){if(current>=target){completeTone();return}current++;s['c'+active()]=current;save();tone();vibrate();render()}
+function resetCurrent(){current=0;s['c'+active()]=0;save();render()}
+function resetAll(){if(confirm('সব তসবীহের হিসাব রিসেট করবেন?')){zikrs.forEach((_,i)=>s['c'+i]=0);current=0;save();render()}}
+document.getElementById('tap').addEventListener('click',tap);document.getElementById('reset').addEventListener('click',resetCurrent);document.getElementById('allReset').addEventListener('click',resetAll);document.getElementById('sound').addEventListener('click',()=>{sound=!sound;save();render()});document.getElementById('vibe').addEventListener('click',()=>{vibe=!vibe;save();render()});
+let pressTimer;document.getElementById('tap').addEventListener('pointerdown',()=>{pressTimer=setTimeout(()=>{if(current<target){current++;s['c'+active()]=current;save();render()}},650)});['pointerup','pointercancel','pointerleave'].forEach(e=>document.getElementById('tap').addEventListener(e,()=>clearTimeout(pressTimer)));
 render();
 </script>
 </body>
