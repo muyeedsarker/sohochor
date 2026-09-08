@@ -8,90 +8,45 @@
 <link rel="manifest" href="./manifest.json">
 <link rel="stylesheet" href="theme.css?v=6">
 <style>
-body{background:#f3f4f6}.tasbih-wrap{max-width:760px;margin:auto;padding:16px}.tasbih-head{background:#08783f;color:#fff;border-radius:18px;padding:20px;text-align:center;margin-bottom:14px}.tasbih-head h1{margin:0 0 6px}.tasbih-head p{margin:0;opacity:.92}.settings{background:#fff;border-radius:16px;padding:14px;margin-bottom:14px;display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}.settings label{font-weight:700}.settings select{padding:10px 12px;border:1px solid #ddd;border-radius:10px;font-size:16px}.zikr{background:#fff;border-radius:18px;padding:18px;margin-bottom:14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06)}.zikr h2{margin:0 0 4px;font-size:24px}.arabic{font-size:24px;line-height:1.8;margin:4px 0;color:#174d35}.counter{font-size:40px;font-weight:800;margin:8px 0}.count-btn{width:100%;min-height:100px;border:0;border-radius:18px;background:#08783f;color:#fff;font-size:25px;font-weight:800;cursor:pointer;touch-action:manipulation}.count-btn:active{transform:scale(.98)}.actions{display:flex;gap:8px;justify-content:center;margin-top:10px}.reset{border:0;border-radius:10px;padding:10px 18px;background:#eee;font-weight:700}.note{font-size:13px;color:#666;margin-top:8px}.back{display:inline-block;margin-bottom:10px;text-decoration:none;font-weight:700;color:#08783f}.bottom{margin-top:14px;text-align:center}.total{font-size:13px;color:#555}.vibration-test{background:#fff;border-radius:16px;padding:14px;margin-bottom:14px;text-align:center}.vibration-test button{border:0;border-radius:10px;padding:11px 18px;background:#08783f;color:#fff;font-weight:700}
+body{background:#f3f4f6}.wrap{max-width:620px;margin:auto;padding:12px}.back{display:inline-block;margin:4px 0 10px;text-decoration:none;font-weight:800;color:#08783f}.head{background:#08783f;color:#fff;border-radius:18px;padding:16px;text-align:center;margin-bottom:10px}.head h1{margin:0 0 4px;font-size:25px}.head p{margin:0;font-size:13px;opacity:.9}.target{background:#fff;border-radius:14px;padding:10px;margin-bottom:10px;text-align:center}.target b{margin-right:6px}.target button{border:1px solid #ddd;background:#fff;border-radius:9px;padding:8px 11px;margin:3px;font-weight:800}.target button.active{background:#08783f;color:#fff;border-color:#08783f}.zikr{background:#fff;border-radius:16px;padding:14px;margin-bottom:10px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,.06)}.zikr h2{margin:0 0 2px;font-size:21px}.arabic{font-size:23px;line-height:1.6;color:#174d35}.counter{font-size:32px;font-weight:900;margin:4px 0 8px}.count{width:100%;min-height:70px;border:0;border-radius:14px;background:#08783f;color:#fff;font-size:22px;font-weight:900;touch-action:manipulation}.count:active{transform:scale(.98)}.reset{margin-top:7px;border:0;border-radius:9px;padding:7px 14px;background:#eee;font-weight:700}.done{font-size:13px;color:#08783f;font-weight:800;min-height:18px}.footer{text-align:center;background:#fff;border-radius:14px;padding:12px;margin-top:4px}.total{font-size:16px;font-weight:800}.hint{font-size:12px;color:#666;margin-top:5px}
 </style>
 </head>
 <body>
-<main class="tasbih-wrap">
+<main class="wrap">
 <a class="back" href="index.html">← হোমে ফিরে যান</a>
-<section class="tasbih-head"><h1>📿 তসবীহ পাঠ</h1><p>SOHOCHOR — সহচর • দ্বীন • জ্ঞান • সেবা • সমাজ</p></section>
-<section class="settings"><label for="target">টার্গেট:</label><select id="target"><option value="33">৩৩ বার</option><option value="100">১০০ বার</option><option value="500">৫০০ বার</option><option value="1000">১০০০ বার</option></select></section>
-<section class="vibration-test"><b>📳 ভাইব্রেশন পরীক্ষা</b><p class="note">আপনার ফোন/ব্রাউজারে vibration চালু আছে কি না পরীক্ষা করুন।</p><button type="button" id="vibrationTest">📳 ভাইব্রেশন পরীক্ষা করুন</button></section>
+<section class="head"><h1>📿 তসবীহ পাঠ</h1><p>সহজে চাপুন, পাঠ গুনুন</p></section>
+<section class="target"><b>টার্গেট:</b><span id="targets"></span></section>
 <div id="list"></div>
-<div class="bottom"><div class="total" id="dailyTotal">আজকের মোট পাঠ: ০</div><div class="note">টার্গেট পূর্ণ হওয়ার পর আবার চাপলে টোন ও ভাইব্রেশন সতর্কতা হবে।</div></div>
+<section class="footer"><div class="total" id="dailyTotal">আজকের মোট পাঠ: ০</div><div class="hint">টার্গেট পূর্ণ হলে টোন ও ভাইব্রেশন সতর্কতা হবে।</div></section>
 </main>
 <script>
 const zikrs=[
- {name:'সুবহানাল্লাহ',arabic:'سُبْحَانَ اللَّهِ'},
- {name:'আলহামদুলিল্লাহ',arabic:'الْحَمْدُ لِلَّهِ'},
- {name:'আল্লাহু আকবার',arabic:'اللَّهُ أَكْبَرُ'},
- {name:'লা ইলাহা ইল্লাল্লাহ',arabic:'لَا إِلٰهَ إِلَّا اللَّهُ'},
- {name:'আস্তাগফিরুল্লাহ',arabic:'أَسْتَغْفِرُ اللَّهَ'},
- {name:'দরুদ শরীফ',arabic:'اللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ'}
+{name:'সুবহানাল্লাহ',arabic:'سُبْحَانَ اللَّهِ'},
+{name:'আলহামদুলিল্লাহ',arabic:'الْحَمْدُ لِلَّهِ'},
+{name:'আল্লাহু আকবার',arabic:'اللَّهُ أَكْبَرُ'},
+{name:'লা ইলাহা ইল্লাল্লাহ',arabic:'لَا إِلٰهَ إِلَّا اللَّهُ'},
+{name:'আস্তাগফিরুল্লাহ',arabic:'أَسْتَغْفِرُ اللَّهُ'},
+{name:'দরুদ শরীফ',arabic:'اللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ'}
 ];
 const key='sohochor_tasbih_v1';
 let state=JSON.parse(localStorage.getItem(key)||'{}');
-const target=document.getElementById('target');
-target.value=state.target||33;
-
-function vibrate(pattern=[180,80,180,80,300]){
-  try{
-    if(typeof navigator!=='undefined' && typeof navigator.vibrate==='function'){
-      navigator.vibrate(0);
-      return navigator.vibrate(pattern);
-    }
-  }catch(e){}
-  return false;
-}
-
-function playAlertTone(){
-  try{
-    const AudioCtx=window.AudioContext||window.webkitAudioContext;
-    if(!AudioCtx) return;
-    const ctx=new AudioCtx();
-    const now=ctx.currentTime;
-    [0,0.16,0.32].forEach((delay,i)=>{
-      const osc=ctx.createOscillator();
-      const gain=ctx.createGain();
-      osc.type='sine';
-      osc.frequency.value=i===1?880:660;
-      gain.gain.setValueAtTime(0.0001,now+delay);
-      gain.gain.exponentialRampToValueAtTime(0.22,now+delay+0.015);
-      gain.gain.exponentialRampToValueAtTime(0.0001,now+delay+0.12);
-      osc.connect(gain);gain.connect(ctx.destination);
-      osc.start(now+delay);osc.stop(now+delay+0.13);
-    });
-  }catch(e){}
-}
-
-function alertReached(){
-  playAlertTone();
-  vibrate([180,80,180,80,300]);
-}
-function save(){state.target=Number(target.value);localStorage.setItem(key,JSON.stringify(state));}
+let target=Number(state.target||33);
+const targetOptions=[33,100,500,1000];
+function bn(n){return Number(n).toLocaleString('bn-BD')}
+function save(){state.target=target;localStorage.setItem(key,JSON.stringify(state))}
+function vibrate(){try{if(navigator.vibrate)return navigator.vibrate([180,80,180,80,300])}catch(e){}return false}
+function tone(){try{const A=window.AudioContext||window.webkitAudioContext;if(!A)return;const c=new A(),n=c.currentTime;[660,880,660].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain(),t=n+i*.16;o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.2,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+.12);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+.13)})}catch(e){}}
+function alertReached(){tone();vibrate()}
+function renderTargets(){document.getElementById('targets').innerHTML=targetOptions.map(x=>`<button class="${x===target?'active':''}" onclick="setTarget(${x})">${bn(x)}</button>`).join('')}
 function render(){
- document.getElementById('list').innerHTML=zikrs.map((z,i)=>{const c=Math.min(Number(state['c'+i]||0),Number(target.value));return `<section class="zikr"><h2>${z.name}</h2><div class="arabic">${z.arabic}</div><div class="counter" id="c${i}">${c} / ${target.value}</div><button class="count-btn" onclick="count(${i})">📿 পাঠ করেছি — চাপুন</button><div class="actions"><button class="reset" onclick="resetCount(${i})">↺ রিসেট</button></div></section>`}).join('');
- updateTotal();
+renderTargets();
+document.getElementById('list').innerHTML=zikrs.map((z,i)=>{const c=Math.min(Number(state['c'+i]||0),target);return `<section class="zikr"><h2>${z.name}</h2><div class="arabic">${z.arabic}</div><div class="counter" id="c${i}">${bn(c)} / ${bn(target)}</div><button class="count" onclick="count(${i})">📿 পাঠ করেছি</button><div class="done" id="d${i}">${c>=target?'✓ টার্গেট পূর্ণ':''}</div><button class="reset" onclick="resetCount(${i})">↺ রিসেট</button></section>`}).join('');
+updateTotal();
 }
-function count(i){
- const k='c'+i;
- const limit=Number(target.value);
- const old=Math.min(Number(state[k]||0),limit);
- if(old>=limit){alertReached();return;}
- const next=old+1;
- state[k]=next;
- save();
- document.getElementById(k).textContent=next+' / '+limit;
- if(next===limit){
-   // Target পূর্ণ হওয়ার মুহূর্তে একবার সতর্কতা। এরপর প্রতিটি অতিরিক্ত চাপেও সতর্কতা হবে।
-   alertReached();
- }
- updateTotal();
-}
-function resetCount(i){state['c'+i]=0;save();document.getElementById('c'+i).textContent='0 / '+target.value;updateTotal();}
-function updateTotal(){const total=zikrs.reduce((s,_,i)=>s+Number(state['c'+i]||0),0);document.getElementById('dailyTotal').textContent='আজকের মোট পাঠ: '+total.toLocaleString('bn-BD');}
-target.addEventListener('change',()=>{save();render()});
-document.getElementById('vibrationTest').addEventListener('click',()=>{const ok=vibrate();playAlertTone();alert(ok?'📳 টোন ও ভাইব্রেশন কমান্ড পাঠানো হয়েছে। ফোনের vibration/sound settings-ও পরীক্ষা করুন।':'এই ব্রাউজার/PWA vibration API সমর্থন করছে না। Android Chrome/PWA-তে পরীক্ষা করুন।');});
+function setTarget(x){target=x;save();render()}
+function count(i){const k='c'+i,old=Math.min(Number(state[k]||0),target);if(old>=target){alertReached();return}const next=old+1;state[k]=next;save();document.getElementById('c'+i).textContent=bn(next)+' / '+bn(target);document.getElementById('d'+i).textContent=next>=target?'✓ টার্গেট পূর্ণ':'';if(next===target)alertReached();updateTotal()}
+function resetCount(i){state['c'+i]=0;save();document.getElementById('c'+i).textContent='০ / '+bn(target);document.getElementById('d'+i).textContent='';updateTotal()}
+function updateTotal(){const total=zikrs.reduce((s,_,i)=>s+Number(state['c'+i]||0),0);document.getElementById('dailyTotal').textContent='আজকের মোট পাঠ: '+bn(total)}
 render();
 </script>
 </body>
