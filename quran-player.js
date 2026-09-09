@@ -1,35 +1,27 @@
-/* SOHOCHOR Quran background player v2 */
-(function(){
-  const tracks=[
-    {name:'সূরা আল-ফাতিহা',url:'https://server8.mp3quran.net/afs/001.mp3'},
-    {name:'সূরা আল-বাকারা',url:'https://server8.mp3quran.net/afs/002.mp3'}
-  ];
-  let audio,idx=Number(localStorage.getItem('sohochorQuranTrack')||0),enabled=localStorage.getItem('sohochorQuranAuto')==='1';
-  if(!Number.isFinite(idx)||idx<0||idx>=tracks.length)idx=0;
-  function media(){
-    if(!('mediaSession' in navigator)||!audio)return;
-    try{navigator.mediaSession.metadata=new MediaMetadata({title:tracks[idx].name,artist:'SOHOCHOR • সহচর',album:'কুরআন তেলাওয়াত'});
-      navigator.mediaSession.setActionHandler('play',()=>start());
-      navigator.mediaSession.setActionHandler('pause',()=>audio.pause());
-      navigator.mediaSession.setActionHandler('previoustrack',()=>change(-1));
-      navigator.mediaSession.setActionHandler('nexttrack',()=>change(1));
-    }catch(e){}
-  }
-  function change(step){idx=(idx+step+tracks.length)%tracks.length;localStorage.setItem('sohochorQuranTrack',idx);audio.src=tracks[idx].url;media();if(enabled)start();render()}
-  function ui(){
-    if(document.getElementById('sohochor-quran-player'))return;
-    const b=document.createElement('div');b.id='sohochor-quran-player';
-    b.innerHTML='<button id="sohochor-quran-toggle" type="button">📖 কুরআন</button><span id="sohochor-quran-name">তেলাওয়াত বন্ধ</span><audio id="sohochor-quran-audio" preload="none" playsinline></audio>';
-    const s=document.createElement('style');s.textContent='#sohochor-quran-player{position:fixed;right:12px;bottom:78px;z-index:99999;display:flex;align-items:center;gap:8px;background:#fff;padding:8px 10px;border:1px solid #dbe9e1;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.18);font:800 12px sans-serif}#sohochor-quran-toggle{border:0;border-radius:10px;padding:9px 12px;background:#063b27;color:#fff;font-weight:900;cursor:pointer}#sohochor-quran-name{max-width:145px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#12392b}@media(max-width:520px){#sohochor-quran-player{bottom:72px;right:8px}#sohochor-quran-name{max-width:105px}}';document.head.appendChild(s);document.body.appendChild(b);
-    audio=document.getElementById('sohochor-quran-audio');audio.src=tracks[idx].url;
-    audio.onplay=()=>{enabled=true;localStorage.setItem('sohochorQuranAuto','1');render();if('mediaSession'in navigator)navigator.mediaSession.playbackState='playing'};
-    audio.onpause=()=>{render();if('mediaSession'in navigator)navigator.mediaSession.playbackState='paused'};
-    audio.onended=()=>change(1);
-    document.getElementById('sohochor-quran-toggle').onclick=()=>{if(audio.paused){enabled=true;localStorage.setItem('sohochorQuranAuto','1');start()}else{enabled=false;localStorage.setItem('sohochorQuranAuto','0');audio.pause()}render()};
-    media();render();
-  }
-  function render(){const btn=document.getElementById('sohochor-quran-toggle'),name=document.getElementById('sohochor-quran-name');if(!btn)return;btn.textContent=audio&&!audio.paused?'⏸️ কুরআন':'▶️ কুরআন';name.textContent=audio&&!audio.paused?tracks[idx].name+' • চলছে':'তেলাওয়াত বন্ধ'}
-  function start(){if(!audio)return;audio.play().catch(()=>{enabled=false;localStorage.setItem('sohochorQuranAuto','0');render()})}
-  function init(){ui();if(enabled)start()}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+/* SOHOCHOR global media shortcut v3 */
+(function(){'use strict';
+if(window.__SOHOCHOR_QURAN_PLAYER__)return;window.__SOHOCHOR_QURAN_PLAYER__=true;
+if(document.getElementById('sohochorMedia'))return; /* quran.html already has the richer media dock */
+const tracks=[
+  {name:'সূরা আল-ফাতিহা',url:'https://server8.mp3quran.net/afs/001.mp3'},
+  {name:'সূরা আল-বাকারা',url:'https://server8.mp3quran.net/afs/002.mp3'}
+];
+const D={en:{'মিডিয়া':'Media','মিডিয়া শর্টকাট':'Media Shortcut','কুরআন তেলাওয়াত':'Quran Recitation','ওয়াজ':'Waz','গজল':'Ghazal','আযান':'Adhan','ইসলামি গান':'Islamic Song','তেলাওয়াত বন্ধ':'Recitation Off','চলছে':'Playing','বন্ধ করুন':'Close','একবারে একটি অডিও চলবে':'Only one audio plays at a time','ইসলামী মিডিয়া দেখুন':'Browse Islamic Media'},hi:{'মিডিয়া':'मीडिया','মিডিয়া শর্টকাট':'मीडिया शॉर्टकट','কুরআন তেলাওয়াত':'क़ुरआन तिलावत','ওয়াজ':'वाज़','গজল':'ग़ज़ल','আযান':'अज़ान','ইসলামি গান':'इस्लामी गीत','তেলাওয়াত বন্ধ':'तिलावत बंद','চলছে':'चल रहा है','বন্ধ করুন':'बंद करें','একবারে একটি অডিও চলবে':'एक समय में एक ऑडियो चलेगा','ইসলামী মিডিয়া দেখুন':'इस्लामी मीडिया देखें'},ar:{'মিডিয়া':'الوسائط','মিডিয়া শর্টকাট':'اختصار الوسائط','কুরআন তেলাওয়াত':'تلاوة القرآن','ওয়াজ':'وعظ','গজল':'غزل','আযান':'أذان','ইসলামি গান':'أناشيد إسلامية','তেলাওয়াত বন্ধ':'إيقاف التلاوة','চলছে':'يعمل الآن','বন্ধ করুন':'إغلاق','একবারে একটি অডিও চলবে':'يعمل صوت واحد فقط في كل مرة','ইসলামী মিডিয়া দেখুন':'تصفح الإعلام الإسلامي'},ur:{'মিডিয়া':'میڈیا','মিডিয়া শর্টকাট':'میڈیا شارٹ کٹ','কুরআন তেলাওয়াত':'قرآن تلاوت','ওয়াজ':'وعظ','গজল':'غزل','আযান':'اذان','ইসলামি গান':'اسلامی گیت','তেলাওয়াত বন্ধ':'تلاوت بند','চলছে':'چل رہا ہے','বন্ধ করুন':'بند کریں','একবারে একটি অডিও চলবে':'ایک وقت میں صرف ایک آڈیو چلے گی','ইসলামী মিডিয়া দেখুন':'اسلامی میڈیا دیکھیں'},ms:{'মিডিয়া':'Media','মিডিয়া শর্টকাট':'Pintasan Media','কুরআন তেলাওয়াত':'Tilawah Al-Quran','ওয়াজ':'Waz','গজল':'Ghazal','আযান':'Azan','ইসলামি গান':'Lagu Islam','তেলাওয়াত বন্ধ':'Tilawah Dimatikan','চলছে':'Sedang Dimainkan','বন্ধ করুন':'Tutup','একবারে একটি অডিও চলবে':'Hanya satu audio dimainkan pada satu masa','ইসলামী মিডিয়া দেখুন':'Lihat Media Islam'}};
+window.SOHOCHOR_PAGE_TRANSLATIONS_5=Object.assign({},window.SOHOCHOR_PAGE_TRANSLATIONS_5||{},Object.fromEntries(Object.keys(D).map(function(k){return [k,Object.assign({},(window.SOHOCHOR_PAGE_TRANSLATIONS_5||{})[k]||{},D[k])]})));
+document.dispatchEvent(new Event('sohochor:i18n-pages5-ready'));
+let audio,idx=Number(localStorage.getItem('sohochorQuranTrack')||0),enabled=localStorage.getItem('sohochorQuranAuto')==='1';
+if(!Number.isFinite(idx)||idx<0||idx>=tracks.length)idx=0;
+function mediaSession(){if(!('mediaSession'in navigator)||!audio)return;try{navigator.mediaSession.metadata=new MediaMetadata({title:tracks[idx].name,artist:'SOHOCHOR • সহচর',album:'কুরআন তেলাওয়াত'});navigator.mediaSession.setActionHandler('play',start);navigator.mediaSession.setActionHandler('pause',function(){audio.pause()});navigator.mediaSession.setActionHandler('previoustrack',function(){change(-1)});navigator.mediaSession.setActionHandler('nexttrack',function(){change(1)})}catch(e){}}
+function change(step){idx=(idx+step+tracks.length)%tracks.length;localStorage.setItem('sohochorQuranTrack',idx);audio.src=tracks[idx].url;mediaSession();if(enabled)start();render()}
+function tr(raw){const lang=document.documentElement.dataset.language||localStorage.getItem('sohochorLanguage')||'bn';const map=(D[lang]||{});return map[raw]||raw}
+function ui(){if(document.getElementById('sohochor-quran-player')||document.getElementById('sohochorMedia'))return;const b=document.createElement('div');b.id='sohochor-quran-player';b.innerHTML='<button id="sohochor-quran-toggle" type="button" aria-expanded="false" title="মিডিয়া শর্টকাট">🎧</button><div id="sohochor-media-menu" hidden><button type="button" data-media="quran">📖 কুরআন তেলাওয়াত</button><button type="button" data-media="azan">🕌 আযান</button><button type="button" data-media="waz">🎙️ ওয়াজ</button><button type="button" data-media="ghazal">🎵 গজল</button><button type="button" data-media="song">☪️ ইসলামি গান</button></div><span id="sohochor-quran-name">তেলাওয়াত বন্ধ</span><audio id="sohochor-quran-audio" preload="none" playsinline></audio>';
+const s=document.createElement('style');s.textContent='#sohochor-quran-player{position:fixed;right:12px;bottom:78px;z-index:99999;display:flex;align-items:center;gap:7px;background:#fff;padding:7px;border:1px solid #dbe9e1;border-radius:16px;box-shadow:0 10px 28px rgba(0,0,0,.18);font:800 12px system-ui,sans-serif}#sohochor-quran-toggle{width:44px;height:44px;border:0;border-radius:13px;background:linear-gradient(145deg,#16a968,#045b38);color:#fff;font-size:21px;cursor:pointer;box-shadow:inset 2px 2px 5px #fff4,0 6px 12px #063b2740}#sohochor-media-menu{position:absolute;right:0;bottom:58px;width:205px;padding:9px;background:#fff;border:1px solid #d9e8df;border-radius:16px;box-shadow:0 14px 36px #173d2c2b}#sohochor-media-menu[hidden]{display:none}#sohochor-media-menu button{display:block;width:100%;border:0;border-radius:11px;padding:10px;background:#f5faf7;color:#17382b;font-weight:800;text-align:left;margin:3px 0;cursor:pointer}#sohochor-media-menu button:hover{background:#e8f5ee}#sohochor-quran-name{max-width:135px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#12392b}@media(max-width:520px){#sohochor-quran-player{right:8px;bottom:72px}#sohochor-quran-name{max-width:100px}}';document.head.appendChild(s);document.body.appendChild(b);audio=document.getElementById('sohochor-quran-audio');audio.src=tracks[idx].url;
+const toggle=document.getElementById('sohochor-quran-toggle'),menu=document.getElementById('sohochor-media-menu');toggle.onclick=function(){const open=menu.hidden;menu.hidden=!open;toggle.setAttribute('aria-expanded',open?'true':'false')};
+audio.onplay=function(){enabled=true;localStorage.setItem('sohochorQuranAuto','1');render()};audio.onpause=function(){render()};audio.onended=function(){change(1)};
+menu.querySelectorAll('[data-media]').forEach(function(btn){btn.onclick=function(){const type=btn.dataset.media;if(type==='quran'){menu.hidden=true;toggle.setAttribute('aria-expanded','false');start();return}if(type==='azan'){audio.pause();audio.src='https://raw.githubusercontent.com/Kiwifu/adhan-mp3/main/Adhan_Ajman_UAE_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%B9%D8%AC%D9%85%D8%A7%D9%86_%D8%A7%D9%84%D8%A5%D9%85%D8%A7%D8%B1%D8%A7%D8%AA%29.mp3';document.getElementById('sohochor-quran-name').textContent='🕌 '+tr('আযান');audio.play().catch(function(){});menu.hidden=true;toggle.setAttribute('aria-expanded','false');return}location.href='./islamic-media.html'}});
+mediaSession();render();}
+function render(){const btn=document.getElementById('sohochor-quran-toggle'),name=document.getElementById('sohochor-quran-name');if(!btn)return;btn.textContent=audio&&!audio.paused?'⏸️':'🎧';name.textContent=audio&&!audio.paused?tracks[idx].name+' • '+tr('চলছে'):tr('তেলাওয়াত বন্ধ')}
+function start(){if(!audio)return;audio.play().catch(function(){enabled=false;localStorage.setItem('sohochorQuranAuto','0');render()})}
+function init(){if(document.getElementById('sohochorMedia'))return;ui();if(enabled)start()}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
