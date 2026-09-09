@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ff6b6b">
+<title>ইংরেজি অক্ষর শিখি 🎈 — SOHOCHOR</title>
+<style>
+:root{--bg1:#fff7e6;--bg2:#e6f7ff;--card:#fff;--accent:#ff6b6b;--accent2:#4ecdc4;--text:#333}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI','Noto Sans Bengali',sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:var(--text);padding:20px}
+.topbar{max-width:1100px;margin:0 auto 18px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.home{display:inline-flex;align-items:center;gap:7px;padding:10px 16px;border-radius:999px;background:#fff;color:#087b4c;text-decoration:none;font-weight:900;box-shadow:0 5px 14px #00000012}
+header{text-align:center;margin-bottom:24px}
+h1{font-size:2.2em;color:var(--accent);margin:0 0 6px}
+header p{font-size:1.1em;color:#555;margin:0;line-height:1.7}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;max-width:1100px;margin:0 auto}
+.card{background:var(--card);border-radius:18px;padding:16px;text-align:center;box-shadow:0 4px 10px #00000014;transition:transform .15s ease,box-shadow .15s ease;border:3px solid transparent;cursor:pointer}
+.card:hover,.card:focus-visible{transform:translateY(-6px) scale(1.03);box-shadow:0 10px 20px #00000026;border-color:var(--accent2);outline:none}
+.card:active{transform:translateY(-2px) scale(1.01)}
+.emoji{font-size:2.6em;margin-bottom:6px}.letter{font-size:2em;font-weight:bold;color:var(--accent);line-height:1}.sound{font-size:1.1em;color:var(--accent2);font-weight:600;margin:4px 0}.example{font-size:.95em;color:#555}
+footer{text-align:center;margin-top:30px;color:#888;font-size:.9em}
+@media(max-width:520px){body{padding:12px}.topbar{margin-bottom:12px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card{padding:13px}.emoji{font-size:2.2em}.letter{font-size:1.8em}.sound{font-size:1em}.example{font-size:.86em}h1{font-size:1.8em}header p{font-size:.98em}}
+</style>
+</head>
+<body>
+<div class="topbar"><a class="home" href="children.html">← 👦 শিশু কর্নার</a></div>
+<header>
+<h1>🎈 ইংরেজি অক্ষর শিখি 🎈</h1>
+<p>প্রতিটা অক্ষরে ক্লিক করলে বা মাউস নিলে বড় হয়ে যাবে — মজা করে শেখো!</p>
+</header>
+<div class="grid" id="letterGrid"></div>
+<footer>তৈরি করা হয়েছে ছোট্ট বন্ধুদের জন্য 💛</footer>
+<script>
+const letters=[
+{l:'A',emoji:'🍎',sound:'অ্যা / আ / এ',example:'Apple - অ্যাপল'},
+{l:'B',emoji:'⚽',sound:'ব',example:'Ball - বল'},
+{l:'C',emoji:'🐱',sound:'ক / স',example:'Cat - ক্যাট'},
+{l:'D',emoji:'🐶',sound:'ড',example:'Dog - ডগ'},
+{l:'E',emoji:'🥚',sound:'এ / ই',example:'Egg - এগ'},
+{l:'F',emoji:'🪭',sound:'ফ',example:'Fan - ফ্যান'},
+{l:'G',emoji:'🐐',sound:'গ / জ',example:'Goat - গোট'},
+{l:'H',emoji:'👒',sound:'হ',example:'Hat - হ্যাট'},
+{l:'I',emoji:'🧊',sound:'ই / আই',example:'Ice - আইস'},
+{l:'J',emoji:'🍯',sound:'জ',example:'Jam - জ্যাম'},
+{l:'K',emoji:'🪁',sound:'ক',example:'Kite - কাইট'},
+{l:'L',emoji:'🦁',sound:'ল',example:'Lion - লায়ন'},
+{l:'M',emoji:'🌙',sound:'ম',example:'Moon - মুন'},
+{l:'N',emoji:'👃',sound:'ন',example:'Nose - নোজ'},
+{l:'O',emoji:'🐂',sound:'অ / ও',example:'Ox - অক্স'},
+{l:'P',emoji:'🖊️',sound:'প',example:'Pen - পেন'},
+{l:'Q',emoji:'👸',sound:'ক (কিউ)',example:'Queen - কুইন'},
+{l:'R',emoji:'🐀',sound:'র',example:'Rat - র‍্যাট'},
+{l:'S',emoji:'☀️',sound:'স',example:'Sun - সান'},
+{l:'T',emoji:'🐯',sound:'ট',example:'Tiger - টাইগার'},
+{l:'U',emoji:'☝️',sound:'আ / উ / ইউ',example:'Up - আপ'},
+{l:'V',emoji:'🚐',sound:'ভ',example:'Van - ভ্যান'},
+{l:'W',emoji:'🐺',sound:'ও (ডাবল-ইউ)',example:'Wolf - উলফ'},
+{l:'X',emoji:'📦',sound:'ক্স',example:'Box - বক্স'},
+{l:'Y',emoji:'💛',sound:'ইয় / আই',example:'Yellow - ইয়েলো'},
+{l:'Z',emoji:'🦓',sound:'জ',example:'Zebra - জেব্রা'}
+];
+const grid=document.getElementById('letterGrid');
+letters.forEach(item=>{
+ const card=document.createElement('div');
+ card.className='card';card.tabIndex=0;card.setAttribute('role','button');card.setAttribute('aria-label',item.l+' — '+item.example);
+ card.innerHTML=`<div class="emoji">${item.emoji}</div><div class="letter">${item.l}</div><div class="sound">${item.sound}</div><div class="example">${item.example}</div>`;
+ const speak=()=>{if('speechSynthesis' in window){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(item.l+'. '+item.example.split(' - ')[0]);u.lang='en-US';u.rate=.8;window.speechSynthesis.speak(u)}};
+ card.addEventListener('click',speak);card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();speak()}});grid.appendChild(card);
+});
+</script>
+</body>
+</html>
