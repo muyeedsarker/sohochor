@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#ff6b6b">
+<meta name="google" content="notranslate">
 <title>ইংরেজি অক্ষর শিখি 🎈 — SOHOCHOR</title>
 <style>
 :root{--bg1:#fff7e6;--bg2:#e6f7ff;--card:#fff;--accent:#ff6b6b;--accent2:#4ecdc4;--text:#333}
@@ -14,10 +15,11 @@ body{margin:0;font-family:'Segoe UI','Noto Sans Bengali',sans-serif;background:l
 header{text-align:center;margin-bottom:24px}
 h1{font-size:2.2em;color:var(--accent);margin:0 0 6px}
 header p{font-size:1.1em;color:#555;margin:0;line-height:1.7}
+.hint{display:inline-block;margin-top:10px;padding:8px 14px;border-radius:999px;background:#fff;color:#087b4c;font-weight:800;box-shadow:0 4px 10px #00000012}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;max-width:1100px;margin:0 auto}
-.card{background:var(--card);border-radius:18px;padding:16px;text-align:center;box-shadow:0 4px 10px #00000014;transition:transform .15s ease,box-shadow .15s ease;border:3px solid transparent;cursor:pointer}
+.card{background:var(--card);border-radius:18px;padding:16px;text-align:center;box-shadow:0 4px 10px #00000014;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease;border:3px solid transparent;cursor:pointer;user-select:none}
 .card:hover,.card:focus-visible{transform:translateY(-6px) scale(1.03);box-shadow:0 10px 20px #00000026;border-color:var(--accent2);outline:none}
-.card:active{transform:translateY(-2px) scale(1.01)}
+.card:active,.card.active{transform:translateY(-2px) scale(1.01);border-color:var(--accent2);box-shadow:0 0 0 4px #4ecdc433,0 10px 20px #00000022}
 .emoji{font-size:2.6em;margin-bottom:6px}.letter{font-size:2em;font-weight:bold;color:var(--accent);line-height:1}.sound{font-size:1.1em;color:var(--accent2);font-weight:600;margin:4px 0}.example{font-size:.95em;color:#555}
 footer{text-align:center;margin-top:30px;color:#888;font-size:.9em}
 @media(max-width:520px){body{padding:12px}.topbar{margin-bottom:12px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card{padding:13px}.emoji{font-size:2.2em}.letter{font-size:1.8em}.sound{font-size:1em}.example{font-size:.86em}h1{font-size:1.8em}header p{font-size:.98em}}
@@ -27,9 +29,10 @@ footer{text-align:center;margin-top:30px;color:#888;font-size:.9em}
 <div class="topbar"><a class="home" href="children.html">← 👦 শিশু কর্নার</a></div>
 <header>
 <h1>🎈 ইংরেজি অক্ষর শিখি 🎈</h1>
-<p>প্রতিটা অক্ষরে ক্লিক করলে বা মাউস নিলে বড় হয়ে যাবে — মজা করে শেখো!</p>
+<p>একটি অক্ষরে ট্যাপ/ক্লিক করো—অক্ষর ও উদাহরণের ইংরেজি উচ্চারণ শুনতে পারবে।</p>
+<div class="hint">🔊 শব্দ শুনতে অক্ষরে চাপ দাও</div>
 </header>
-<div class="grid" id="letterGrid"></div>
+<div class="grid" id="letterGrid" aria-label="English alphabet learning cards"></div>
 <footer>তৈরি করা হয়েছে ছোট্ট বন্ধুদের জন্য 💛</footer>
 <script>
 const letters=[
@@ -61,12 +64,26 @@ const letters=[
 {l:'Z',emoji:'🦓',sound:'জ',example:'Zebra - জেব্রা'}
 ];
 const grid=document.getElementById('letterGrid');
+let activeCard=null;
+function speak(item,card){
+ if(activeCard)activeCard.classList.remove('active');
+ activeCard=card;card.classList.add('active');
+ if(!('speechSynthesis' in window)){return}
+ window.speechSynthesis.cancel();
+ const word=item.example.split(' - ')[0];
+ const u=new SpeechSynthesisUtterance(item.l+'. '+word);
+ u.lang='en-US';u.rate=.78;u.pitch=1.05;
+ u.onend=()=>card.classList.remove('active');
+ u.onerror=()=>card.classList.remove('active');
+ window.speechSynthesis.speak(u);
+}
 letters.forEach(item=>{
  const card=document.createElement('div');
  card.className='card';card.tabIndex=0;card.setAttribute('role','button');card.setAttribute('aria-label',item.l+' — '+item.example);
  card.innerHTML=`<div class="emoji">${item.emoji}</div><div class="letter">${item.l}</div><div class="sound">${item.sound}</div><div class="example">${item.example}</div>`;
- const speak=()=>{if('speechSynthesis' in window){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(item.l+'. '+item.example.split(' - ')[0]);u.lang='en-US';u.rate=.8;window.speechSynthesis.speak(u)}};
- card.addEventListener('click',speak);card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();speak()}});grid.appendChild(card);
+ card.addEventListener('click',()=>speak(item,card));
+ card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();speak(item,card)}});
+ grid.appendChild(card);
 });
 </script>
 </body>
